@@ -6,6 +6,10 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",
     "lint": "tsc",
