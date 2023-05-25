@@ -8,6 +8,6 @@
     "moduleResolution": "node",
     "preserveConstEnums": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "tests/empty.test.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

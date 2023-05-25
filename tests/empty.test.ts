@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import * as S from "@effect/schema/Schema"
 import { pipe } from "@effect/data/Function"
-import * as _ from "./empty"
+import * as _ from "../src/empty"
 
 
 describe("empty", () => {
