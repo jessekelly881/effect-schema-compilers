@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.5
+
+### Patch Changes
+
+- fb670fe: .
+
 ## 0.0.3
 
 ### Patch Changes
