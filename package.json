@@ -2,9 +2,10 @@
   "name": "effect-schema-compilers",
   "version": "0.0.5",
   "description": "",
-  "publishConfig": {
-    "access": "public",
-    "directory": "dist"
+  "type": "module",
+  "private": false,
+  "exports": {
+    "./": "./dist/"
   },
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "@effect/data": "^0.12.3",
-    "@effect/schema": "^0.19.3"
+    "@effect/schema": "^0.19.3",
+    "build-utils": "^2.0.12"
   }
 }
