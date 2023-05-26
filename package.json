@@ -1,10 +1,12 @@
 {
   "name": "effect-schema-compilers",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "type": "module",
   "private": false,
-  "files": ["dist/**"],
+  "files": [
+    "dist/**"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",

@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.8
+
+### Patch Changes
+
+- 7cfa319: updated package.json
+
 ## 0.0.7
 
 ### Patch Changes
