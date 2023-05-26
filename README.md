@@ -1,6 +1,10 @@
 # effect-schema-compilers
 Compilers for @effect/schema
 
+### Current TODOs
+- Convert to monorepo to allow supporting multiple compilers without dep issues. 
+- Create compiler for fakerjs
+
 ## Empty
 
 Generate "empty" values from a Schema. Similar to [zod-empty](https://github.com/toiroakr/zod-empty) with a similar motivation.
