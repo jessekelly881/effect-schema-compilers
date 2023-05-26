@@ -96,7 +96,10 @@ describe("semigroup", () => {
 
     it("lazy", () => {
         const { combine } = _.semigroupFor(Category)
-        expect(combine({ name: "a", subcategories: [] }, { name: "b", subcategories: [] })).toEqual({ name: "b", subcategories: [] })
+        const a: Category = { name: "a", subcategories: [{ name: "a1", subcategories: [] }] }
+        const b: Category = { name: "b", subcategories: [] }
+
+        expect(combine(a, b)).toEqual({ name: "b", subcategories: [] })
     })
 
 })
