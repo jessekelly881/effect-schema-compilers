@@ -4,6 +4,18 @@ import { pipe } from "@effect/data/Function"
 import * as _ from "../src/empty"
 
 
+interface Category {
+    readonly name: string;
+    readonly subcategories: ReadonlyArray<Category>;
+}
+
+const Category: S.Schema<Category> = S.lazy(() =>
+    S.struct({
+        name: S.string,
+        subcategories: S.array(Category),
+    })
+);
+
 describe("empty", () => {
 
     it("ast", () => {
@@ -121,5 +133,10 @@ describe("empty", () => {
     it("unknown", () => {
         const empty = _.emptyFor(S.undefined)
         expect(empty).toBeUndefined()
+    })
+
+    it("lazy", () => {
+        const empty = _.emptyFor(Category)
+        expect(empty).toEqual({ name: "", subcategories: [] })
     })
 })

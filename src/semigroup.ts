@@ -45,6 +45,7 @@ export const semigroupFor = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<A> =>
             case "Transform": return go(ast.to)
             case "Declaration": return go(ast.type)
 
+            case "Lazy": return go(ast.f())
             case "Tuple": return Semi.tuple(...ast.elements.map((e) => go(e.type))) as Semi.Semigroup<A>
 
             case "TypeLiteral": {

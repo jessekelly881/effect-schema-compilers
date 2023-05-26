@@ -6,6 +6,18 @@ import * as Semi from "@effect/data/typeclass/Semigroup"
 import * as n from "@effect/data/Number"
 
 
+interface Category {
+    readonly name: string;
+    readonly subcategories: ReadonlyArray<Category>;
+}
+
+const Category: S.Schema<Category> = S.lazy(() =>
+    S.struct({
+        name: S.string,
+        subcategories: S.array(Category),
+    })
+);
+
 describe("semigroup", () => {
 
     it("ast", () => {
@@ -51,9 +63,13 @@ describe("semigroup", () => {
     })
 
     it("struct/ ", () => {
-        const schema = S.struct({ a: S.number, b: S.string });
+        const schema = S.struct({ a: S.number, b: S.string, c: S.optional(S.boolean) });
         const { combine } = _.semigroupFor(schema)
+
         expect(combine({ a: 0, b: "0" }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
+        expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
+        expect(combine({ a: 0, b: "0" }, { a: 1, b: "1", c: true })).toEqual({ a: 1, b: "1", c: true })
+        expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 1, b: "1", c: false })
     })
 
     it("boolean/ ", () => {
@@ -76,6 +92,11 @@ describe("semigroup", () => {
 
         const { combine } = _.semigroupFor(schema)
         expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 0, b: "01", c: false })
+    })
+
+    it("lazy", () => {
+        const { combine } = _.semigroupFor(Category)
+        expect(combine({ name: "a", subcategories: [] }, { name: "b", subcategories: [] })).toEqual({ name: "b", subcategories: [] })
     })
 
 })
