@@ -50,6 +50,12 @@ describe("empty", () => {
         expect(empty).toEqual(["", 0])
     })
 
+    it("literal", () => {
+        const s = pipe(S.literal("a", "b"), _.empty(() => "b" as const));
+        const empty = _.emptyFor(s)
+        expect(empty).toBe("a")
+    })
+
     it("record", () => {
         const empty = _.emptyFor(S.record(S.string, S.number));
         expect(empty).toEqual({});

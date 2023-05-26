@@ -3,7 +3,7 @@ import * as AST from "@effect/schema/AST"
 
 export const EmptyHookId = "@effect/schema/annotation/EmptyHookId" as const
 
-export const empty = <A>(empty: () => A): <I>(self: S.Schema<I, A>) => S.Schema<I, A> => 
+export const empty = <I, A, const E extends A = A>(empty: () => E): (self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [EmptyHookId]: empty })
 
 const getAnnotation = AST.getAnnotation<() => unknown>(
