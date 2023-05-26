@@ -4,9 +4,8 @@
   "description": "",
   "type": "module",
   "private": false,
-  "exports": {
-    "./": "./dist/"
-  },
+  "files": ["dist/**"],
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",
     "lint": "tsc",

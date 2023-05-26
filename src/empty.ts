@@ -1,7 +1,5 @@
 import * as S from "@effect/schema/Schema"
-import * as O from "@effect/data/Option"
 import * as AST from "@effect/schema/AST"
-import { pipe } from "@effect/data/Function"
 
 export const EmptyHookId = "@effect/schema/annotation/EmptyHookId" as const
 

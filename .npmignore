@@ -1,4 +1,6 @@
 src
+test
+.husky
 .changeset
 .github
 pnpm-lock.yaml
