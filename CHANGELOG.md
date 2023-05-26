@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.6
+
+### Patch Changes
+
+- 997c734: publish test
+
 ## 0.0.5
 
 ### Patch Changes
