@@ -40,7 +40,8 @@ expect(combine({ a: 0, b: "0" }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
 The semigroup for a Schema can be set using the semigroup() fn. For example,
 
 ```ts
-import * as E from "effect-schema-compilers/dist/empty";
+import * as S from "@effect/schema/Schema";
+import * as _ from "effect-schema-compilers/dist/semigroup";
 import { pipe } from "@effect/data/Function";
 
 const schema = S.struct({ 
