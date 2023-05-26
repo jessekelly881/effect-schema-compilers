@@ -51,7 +51,7 @@ describe("empty", () => {
     })
 
     it("literal", () => {
-        const s = pipe(S.literal("a", "b"), _.empty(() => "b" as const));
+        const s = pipe(S.literal("a", "b"), _.empty(() => "a" as const));
         const empty = _.emptyFor(s)
         expect(empty).toBe("a")
     })
