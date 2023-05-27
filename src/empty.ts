@@ -10,61 +10,61 @@ const getAnnotation = AST.getAnnotation<() => unknown>(
   EmptyHookId
 )
 
-export const emptyFor = <I, A>(schema: S.Schema<I, A>): A => {
-    const go = (ast: AST.AST): A => {
+export const to = <I, A>(schema: S.Schema<I, A>): A => go(AST.to(schema.ast))
 
-        const annotations = getAnnotation(ast)
-        if(annotations._tag === "Some") {
-         return annotations.value() as A
-        }
+export const from = <I, A>(schema: S.Schema<I, A>): I => go(AST.from(schema.ast))
 
-        switch (ast._tag) {
-            case "Literal": return ast.literal as A
-            case "ObjectKeyword": return {} as A
-            case "Tuple": return ast.elements.map((e) => go(e.type)) as A
-            case "BigIntKeyword": return 0n as A
-            case "NumberKeyword": return 0 as A
-            case "StringKeyword": return "" as A
-            case "BooleanKeyword": return false as A
-            case "Refinement": return go(ast.from)
-            case "Transform": return go(ast.to)
-            case "Declaration": return go(ast.type)
-            case "Enums": return ast.enums[0][1] as A
-            case "Union": return go(ast.types[0]) // TODO: Pick the "simplest" value
-            case "Lazy": return go(ast.f())
-            case "TemplateLiteral": {
-                const components = [ast.head]
-                for (const span of ast.spans) {
-                    components.push(span.literal)
-                }
-                return components.join("") as A
-            }
-            case "SymbolKeyword": return Symbol() as A
-            case "UniqueSymbol": return JSON.stringify(ast.symbol.toString()) as A
-            case "TypeLiteral": {
-                const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
-                const output: any = {}
 
-                for (let i = 0; i < propertySignaturesTypes.length; i++) {
-                    const ps = ast.propertySignatures[i]
-                    const name = ps.name
-                    if (!ps.isOptional) {
-                    output[name] = propertySignaturesTypes[i]
-                    }
-                }
+const go = (ast: AST.AST): any => {
 
-                return output
-            }
-            case "UndefinedKeyword":
-            case "UnknownKeyword":
-            case "VoidKeyword":
-            case "AnyKeyword":
-                return undefined
-        }
-
-        throw new Error(`unhandled ${ast._tag}`)
-
+    const annotations = getAnnotation(ast)
+    if(annotations._tag === "Some") {
+        return annotations.value()
     }
 
-    return go(schema.ast)
+    switch (ast._tag) {
+        case "Literal": return ast.literal
+        case "ObjectKeyword": return {}
+        case "Tuple": return ast.elements.map((e) => go(e.type))
+        case "BigIntKeyword": return 0n
+        case "NumberKeyword": return 0
+        case "StringKeyword": return ""
+        case "BooleanKeyword": return false
+        case "Refinement": return go(ast.from)
+        case "Transform": return go(ast.to)
+        case "Declaration": return go(ast.type)
+        case "Enums": return ast.enums[0][1]
+        case "Union": return go(ast.types[0]) // TODO: Pick the "simplest" value
+        case "Lazy": return go(ast.f())
+        case "TemplateLiteral": {
+            const components = [ast.head]
+            for (const span of ast.spans) {
+                components.push(span.literal)
+            }
+            return components.join("")
+        }
+        case "SymbolKeyword": return Symbol()
+        case "UniqueSymbol": return JSON.stringify(ast.symbol.toString())
+        case "TypeLiteral": {
+            const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
+            const output: any = {}
+
+            for (let i = 0; i < propertySignaturesTypes.length; i++) {
+                const ps = ast.propertySignatures[i]
+                const name = ps.name
+                if (!ps.isOptional) {
+                output[name] = propertySignaturesTypes[i]
+                }
+            }
+
+            return output
+        }
+        case "UndefinedKeyword":
+        case "UnknownKeyword":
+        case "VoidKeyword":
+        case "AnyKeyword":
+            return undefined
+    }
+
+    throw new Error(`unhandled ${ast._tag}`)
 }

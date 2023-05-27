@@ -190,7 +190,7 @@ describe("equivalence", () => {
     })
 
     it("record", () => {
-        const empty = _.emptyFor(S.record(S.string, S.number));
+        const empty = _.to(S.record(S.string, S.number));
         expect(empty).toEqual({});
     });
 
@@ -200,7 +200,7 @@ describe("equivalence", () => {
         S.struct({ type: S.literal("b"), b: S.number })
         )
 
-        const empty = _.emptyFor(schema)
+        const empty = _.to(schema)
         expect(empty).toEqual({ type: "a", a: "" })
     })
 

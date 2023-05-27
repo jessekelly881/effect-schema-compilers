@@ -12,7 +12,7 @@ Generate "empty" values from a Schema. Similar to [zod-empty](https://github.com
 ```ts
 import * as E from "effect-schema-compilers/dist/empty";
 
-const s = E.emptyFor(S.struct({ num: S.number, str: S.string })); // { num: 0, str: "" }
+const s = E.to(S.struct({ num: S.number, str: S.string })); // { num: 0, str: "" }
 ```
 
 Also supports setting the empty value for a schema. E.g.
@@ -21,7 +21,7 @@ Also supports setting the empty value for a schema. E.g.
 import * as E from "effect-schema-compilers/dist/empty";
 import { pipe } from "@effect/data/Function";
 
-const s = pipe(S.number, E.empty(() => 1), E.emptyFor) // 1
+const s = pipe(S.number, E.empty(() => 1), E.to) // 1
 ```
 
 ## Semigroup
