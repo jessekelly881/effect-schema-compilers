@@ -26,7 +26,7 @@ const s = pipe(S.number, E.empty(() => 1), E.emptyFor) // 1
 
 ## Semigroup
 
-Generates a semigroup from the provided Schema. The default Semigroup.last is used which simply overrides the previous value.
+Generates a [Semigroup](https://effect-ts.github.io/data/modules/typeclass/Semigroup.ts.html) from the provided Schema. The default Semigroup.last is used which simply overrides the previous value.
 
 ```ts
 import * as S from "@effect/schema/Schema";
