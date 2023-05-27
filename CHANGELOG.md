@@ -1,5 +1,12 @@
 # @kellyjesse881/empty
 
+## 0.0.10
+
+### Patch Changes
+
+- de7b08c: added semigroup compiler
+- 01a2d9b: added to,from compilers
+
 ## 0.0.9
 
 ### Patch Changes
