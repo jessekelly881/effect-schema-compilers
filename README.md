@@ -69,4 +69,16 @@ const eq = _.to(schema); // Equivalence<"a" | "b">
 expect(eq("a", "b")).toBe(false)
 ```
 
+The Equivalence for a Schema can be set using equivalence(). E.g. 
 
+```ts
+const person = S.struct({
+    id: S.string,
+    a: S.string
+})
+
+const schema = pipe(person, _.equivalence((a, b) => a.id === b.id))
+const eq = _.to(schema);
+
+expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
+```
