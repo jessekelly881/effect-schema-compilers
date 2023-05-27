@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
+    "fast-check": "^3.9.0",
     "husky": "^8.0.3",
     "tsup": "^6.6.3",
     "vitest": "^0.29.3"
