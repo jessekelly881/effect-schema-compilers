@@ -36,7 +36,7 @@ const Category: S.Schema<Category> = S.lazy(() =>
     })
 );
 
-describe("empty", () => {
+describe("equivalence", () => {
 
     it("ast", () => {
         const ast = pipe(S.NumberFromString, _.equivalence(Eq.strict())).ast.annotations
@@ -96,6 +96,20 @@ describe("empty", () => {
         expect(eq(val, {...val, d: true})).toEqual(false)
     })
 
+    it("custom eq", () => {
+        const person = S.struct({
+            id: S.string,
+            a: S.string
+        })
+
+        const schema = pipe(person, _.equivalence((a, b) => a.id === b.id))
+        const eq = _.equivalenceFor(schema);
+
+        generatesValidEq(schema)
+        expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
+    })
+
+
     it("template literal", () => {
         const schema = S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
         const eq = _.equivalenceFor(schema)
@@ -115,26 +129,61 @@ describe("empty", () => {
         expect(eq(["", 1], ["", 1, true])).toEqual(false)
     })
 
+    it("void", () => {
+        const schema = S.void;
+        generatesValidEq(schema)
+    })
+
+    it("symbol", () => {
+        const schema = S.symbol;
+        const eq = _.equivalenceFor(schema)
+        const symbol = Symbol("test")
+
+        generatesValidEq(schema)
+        expect(eq(symbol, symbol)).toEqual(true)
+    })
+
+    it("any", () => {
+        const schema = S.any;
+        const eq = _.equivalenceFor(schema)
+
+        generatesValidEq(schema)
+        expect(eq(1, 1)).toEqual(true)
+        expect(eq("1", "1")).toEqual(true)
+        expect(eq(1, "1")).toEqual(false)
+    })
+
+    it("unknown", () => {
+        const schema = S.unknown;
+        const eq = _.equivalenceFor(schema)
+
+        generatesValidEq(schema)
+        expect(eq(1, 1)).toEqual(true)
+        expect(eq("1", "1")).toEqual(true)
+    })
+
+    it("transform", () => {
+        const schema: S.Schema<string, readonly [string]> = pipe(
+          S.string,
+          S.transform(
+            S.tuple(S.string),
+            (s) => [s] as readonly [string],
+            ([s]) => s
+          )
+        );
+
+        const eq = _.equivalenceFor(schema)
+
+        generatesValidEq(schema)
+        expect(eq([""], [" "])).toEqual(false)
+        expect(eq([" "], [""])).toEqual(false)
+    })
+
     /*
     it("lazy", () => {
         const eq = _.equivalenceFor(Category)
 
         expect(eq({ name: "a", subcategories: [] }, { name: "a", subcategories: [] })).toEqual(true)
-    })
-
-    it("set value", () => {
-        const schema = pipe(S.NumberFromString, _.empty(() => 1))
-        const empty = _.emptyFor(schema);
-        expect(empty).toBe(1)
-    })
-
-    it("transform", () => {
-        const schema: S.Schema<string, readonly [string]> = pipe(
-        S.string,
-        S.transform(S.tuple(S.string), (s) => [s] as readonly string[], ([s]) => s))
-        const empty = _.emptyFor(schema)
-
-        expect(empty).toEqual([""])
     })
 
     it("record", () => {
@@ -150,26 +199,6 @@ describe("empty", () => {
 
         const empty = _.emptyFor(schema)
         expect(empty).toEqual({ type: "a", a: "" })
-    })
-
-    it("void", () => {
-        const empty = _.emptyFor(S.void)
-        expect(empty).toBeUndefined()
-    })
-
-    it("symbol", () => {
-        const empty = _.emptyFor(S.symbol)
-        expect(empty.toString()).toEqual(Symbol().toString())
-    })
-
-    it("any", () => {
-        const empty = _.emptyFor(S.any)
-        expect(empty).toBeUndefined()
-    })
-
-    it("unknown", () => {
-        const empty = _.emptyFor(S.undefined)
-        expect(empty).toBeUndefined()
     })
 
     */
