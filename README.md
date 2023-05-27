@@ -53,3 +53,20 @@ const schema = S.struct({
 const { combine } = _.semigroupFor(schema)
 expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 0, b: "01", c: false })
 ```
+
+## Equivalence 
+
+Generates an instance of [Equivalence](https://effect-ts.github.io/data/modules/typeclass/Equivalence.ts.html) for a given Schema.
+
+```ts
+import * as S from "@effect/schema/Schema";
+import * as _ from "effect-schema-compilers/dist/equivalence";
+import { pipe } from "@effect/data/Function";
+
+const schema = S.literal("a", "b")
+const eq = _.equivalenceFor(schema); // Equivalence<"a" | "b">
+
+expect(eq("a", "b")).toBe(false)
+```
+
+
