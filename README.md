@@ -33,7 +33,7 @@ import * as S from "@effect/schema/Schema";
 import * as _ from "effect-schema-compilers/dist/semigroup";
 
 const schema = S.struct({ a: S.number, b: S.string });
-const { combine } = _.semigroupFor(schema)
+const { combine } = _.to(schema)
 expect(combine({ a: 0, b: "0" }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
 ```
 
@@ -50,7 +50,7 @@ const schema = S.struct({
     c: S.boolean
 });
 
-const { combine } = _.semigroupFor(schema)
+const { combine } = _.to(schema)
 expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 0, b: "01", c: false })
 ```
 
