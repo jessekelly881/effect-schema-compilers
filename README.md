@@ -64,7 +64,7 @@ import * as _ from "effect-schema-compilers/dist/equivalence";
 import { pipe } from "@effect/data/Function";
 
 const schema = S.literal("a", "b")
-const eq = _.equivalenceFor(schema); // Equivalence<"a" | "b">
+const eq = _.to(schema); // Equivalence<"a" | "b">
 
 expect(eq("a", "b")).toBe(false)
 ```

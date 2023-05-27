@@ -6,7 +6,7 @@ import * as Semi from "@effect/data/typeclass/Semigroup"
 import * as n from "@effect/data/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
-import { equivalenceFor } from "../src/equivalence"
+import { to } from "../src/equivalence"
 
 interface Category {
     readonly name: string;
@@ -25,7 +25,7 @@ const Category: S.Schema<Category> = S.lazy(() =>
  */
 const generatesValidSemigroup = <I, A>(schema: S.Schema<I, A>) => {
     const arb = A.to(schema)(fc);
-    const eq = equivalenceFor(schema)
+    const eq = to(schema)
     const { combine } = _.semigroupFor(schema)
 
     const associativity = fc.property(arb, arb, arb, (a, b, c) => 
