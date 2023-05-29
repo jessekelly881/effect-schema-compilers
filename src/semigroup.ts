@@ -11,19 +11,23 @@ const getAnnotation = AST.getAnnotation<Semi.Semigroup<unknown>>(
   SemigroupHookId
 )
 
+interface Semigroup<A> {
+    (): Semi.Semigroup<A>
+}
+
 /**
  * @description 
  * Generates a Semigroup from a given Schema. By default all values implement Semigroup.last so by default values are just overridden.
  */
-export const to = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<A> => go(AST.to(schema.ast))
+export const to = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<A> => go(AST.to(schema.ast))()
 
-export const from = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<I> => go(AST.from(schema.ast))
+export const from = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<I> => go(AST.from(schema.ast))()
 
-const go = (ast: AST.AST): Semi.Semigroup<any>  => {
+const go = (ast: AST.AST): Semigroup<any>  => {
 
     const annotations = getAnnotation(ast)
     if(annotations._tag === "Some") {
-        return annotations.value
+        return () => annotations.value
     }
 
     switch (ast._tag) {
@@ -42,26 +46,31 @@ const go = (ast: AST.AST): Semi.Semigroup<any>  => {
         case "VoidKeyword":
         case "AnyKeyword":
         case "TemplateLiteral": 
-            return Semi.last()
+            return () => Semi.last()
 
         case "Refinement": return go(ast.from)
         case "Transform": return go(ast.to)
         case "Declaration": return go(ast.type)
 
         case "Lazy": return go(ast.f())
-        case "Tuple": return Semi.tuple(...ast.elements.map((e) => go(e.type)))
+        case "Tuple": {
+            const els = ast.elements.map((e) => go(e.type))
+            return () => Semi.tuple(...els.map(e => e()))
+        }
 
         case "TypeLiteral": {
             const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
             const output: any = {}
 
-            for (let i = 0; i < propertySignaturesTypes.length; i++) {
-                const ps = ast.propertySignatures[i]
-                const name = ps.name
-                output[name] = propertySignaturesTypes[i]
-            }
+            return () => {
+                for (let i = 0; i < propertySignaturesTypes.length; i++) {
+                    const ps = ast.propertySignatures[i]
+                    const name = ps.name
+                    output[name] = propertySignaturesTypes[i]()
+                }
 
-            return Semi.struct(output)
+                return Semi.struct(output)
+            }
         }
     }
 
