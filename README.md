@@ -12,7 +12,7 @@ Generate "empty" values from a Schema. Similar to [zod-empty](https://github.com
 ```ts
 import * as E from "effect-schema-compilers/dist/empty";
 
-const s = E.to(S.struct({ num: S.number, str: S.string })); // { num: 0, str: "" }
+const s = E.to(S.struct({ num: S.number, str: S.string }))(); // { num: 0, str: "" }
 ```
 
 Also supports setting the empty value for a schema. E.g.
@@ -21,7 +21,7 @@ Also supports setting the empty value for a schema. E.g.
 import * as E from "effect-schema-compilers/dist/empty";
 import { pipe } from "@effect/data/Function";
 
-const s = pipe(S.number, E.empty(() => 1), E.to) // 1
+const s = pipe(S.number, E.empty(() => 1), E.to()) // 1
 ```
 
 ## Semigroup
@@ -33,7 +33,7 @@ import * as S from "@effect/schema/Schema";
 import * as _ from "effect-schema-compilers/dist/semigroup";
 
 const schema = S.struct({ a: S.number, b: S.string });
-const { combine } = _.to(schema)
+const { combine } = _.to(schema)()
 expect(combine({ a: 0, b: "0" }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
 ```
 
@@ -50,7 +50,7 @@ const schema = S.struct({
     c: S.boolean
 });
 
-const { combine } = _.to(schema)
+const { combine } = _.to(schema)()
 expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 0, b: "01", c: false })
 ```
 
@@ -64,7 +64,7 @@ import * as _ from "effect-schema-compilers/dist/equivalence";
 import { pipe } from "@effect/data/Function";
 
 const schema = S.literal("a", "b")
-const eq = _.to(schema); // Equivalence<"a" | "b">
+const eq = _.to(schema)(); // Equivalence<"a" | "b">
 
 expect(eq("a", "b")).toBe(false)
 ```
@@ -78,7 +78,7 @@ const person = S.struct({
 })
 
 const schema = pipe(person, _.equivalence((a, b) => a.id === b.id))
-const eq = _.to(schema);
+const eq = _.to(schema)();
 
 expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
 ```
