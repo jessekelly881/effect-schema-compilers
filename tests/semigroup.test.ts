@@ -7,18 +7,7 @@ import * as n from "@effect/data/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
 import { to } from "../src/equivalence"
-
-interface Category {
-    readonly name: string;
-    readonly subcategories: ReadonlyArray<Category>;
-}
-
-const Category: S.Schema<Category> = S.lazy(() =>
-    S.struct({
-        name: S.string,
-        subcategories: S.array(Category),
-    })
-);
+import { Category } from "./schemas";
 
 /**
  * Tests that the generated Semigroup for a given Schema is a valid Semigroup

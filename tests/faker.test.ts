@@ -3,113 +3,44 @@ import * as S from "@effect/schema/Schema"
 import * as _ from "../src/faker";
 import * as F from '@faker-js/faker';
 import { pipe } from "@effect/data/Function";
+import { Category } from "./schemas";
 
 
-interface Category {
-    readonly name: string;
-    readonly subcategories: ReadonlyArray<Category>;
+/**
+ * Tests that the generated value correctly matches the schema
+ */
+const generatesValidValue = <I, A>(schema: S.Schema<I, A>) => {
+    const fake = _.to(schema)(F.faker)
+    expect(S.is(schema)(fake)).to.be.true
 }
 
-const Category: S.Schema<Category> = S.lazy(() =>
-    S.struct({
-        name: S.string,
-        subcategories: S.array(Category),
-    })
-);
+enum Fruits {
+    Apple,
+    Banana,
+}
 
 describe("faker", () => {
-    it("literal", () => {
-        const schema = S.literal("a", "b")
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("boolean", () => {
-        const schema = S.boolean
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
+    it("literal", () => generatesValidValue(S.literal("a", "b")))
+    it("boolean", () => generatesValidValue(S.boolean))
+    it("number", () => generatesValidValue(S.number))
+    it("bigint", () => generatesValidValue(S.bigint))
+    it("string", () => generatesValidValue(S.string))
+    it("symbol", () => generatesValidValue(S.symbol))
+    it("union", () => generatesValidValue(S.union(S.number, S.string)))
+    it("record", () => generatesValidValue(S.record(S.string, S.number)));
+    it("enum", () => generatesValidValue(S.enums(Fruits)))
 
     it("transform", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
             S.string,
             S.transform(S.tuple(S.string), (s) => [s] as readonly [string], ([s]) => s))
 
-        const fakeTo = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fakeTo)).to.be.true
+        generatesValidValue(schema);
     })
-
-    it("number", () => {
-        const schema = S.number
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("bigint", () => {
-        const schema = S.bigint
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("string", () => {
-        const schema = S.string
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("symbol", () => {
-        const schema = S.symbol
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("enum", () => {
-        enum Fruits {
-          Apple,
-          Banana,
-        }
-
-        const schema = S.enums(Fruits)
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    /*
-    it("lazy", () => {
-        const schema = Category
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-    */
-
-    it("union", () => {
-        const schema = S.union(S.number, S.string)
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
-    })
-
-    it("record", () => {
-        const schema = S.record(S.string, S.number)
-        const fake = _.to(schema)(F.faker);
-
-        expect(S.is(schema)(fake)).to.be.true
-    });
 
     it("tuple", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean), S.element(S.string))
-        const fake = _.to(schema)(F.faker)
-
-        expect(S.is(schema)(fake)).to.be.true
+        generatesValidValue(schema);
     })
 
     it("struct", () => {
@@ -121,15 +52,21 @@ describe("faker", () => {
             d: S.optional(S.boolean),
           })
         )
-        const fake = _.to(schema)(F.faker)
-    
-        expect(S.is(schema)(fake)).to.be.true
+
+        generatesValidValue(schema)
     })
 
     it("struct - partial", () => {
         const schema = S.partial(S.struct({ a: S.string, b: S.number }))
+        generatesValidValue(schema)
+    })
+
+    /*
+    it("lazy", () => {
+        const schema = Category
         const fake = _.to(schema)(F.faker)
 
         expect(S.is(schema)(fake)).to.be.true
     })
+    */
 })

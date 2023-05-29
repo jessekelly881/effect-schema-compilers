@@ -5,19 +5,7 @@ import * as _ from "../src/empty"
 import * as Eq from "../src/equivalence"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
-
-
-interface Category {
-    readonly name: string;
-    readonly subcategories: ReadonlyArray<Category>;
-}
-
-const Category: S.Schema<Category> = S.lazy(() =>
-    S.struct({
-        name: S.string,
-        subcategories: S.array(Category),
-    })
-);
+import { Category } from "./schemas";
 
 /**
  * Tests that 

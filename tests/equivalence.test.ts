@@ -5,6 +5,7 @@ import * as _ from "../src/equivalence"
 import * as Eq from "@effect/data/typeclass/Equivalence";
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
+import { Category } from "./schemas";
 
 
 /**
@@ -22,20 +23,6 @@ const generatesValidEq = <I, A>(schema: S.Schema<I, A>) => {
     fc.assert(symmetry)
     fc.assert(transitivity)
 }
-
-
-
-interface Category {
-    readonly name: string;
-    readonly subcategories: ReadonlyArray<Category>;
-}
-
-const Category: S.Schema<Category> = S.lazy(() =>
-    S.struct({
-        name: S.string,
-        subcategories: S.array(Category),
-    })
-);
 
 describe("equivalence", () => {
 
