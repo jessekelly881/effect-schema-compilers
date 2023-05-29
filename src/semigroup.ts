@@ -1,6 +1,7 @@
 import * as S from "@effect/schema/Schema"
 import * as Semi from "@effect/data/typeclass/Semigroup"
 import * as AST from "@effect/schema/AST"
+import { memoizeThunk } from "./common"
 
 export const SemigroupHookId = "@effect/schema/annotation/SemigroupHookId" as const
 
@@ -52,7 +53,11 @@ const go = (ast: AST.AST): Semigroup<any>  => {
         case "Transform": return go(ast.to)
         case "Declaration": return go(ast.type)
 
-        case "Lazy": return go(ast.f())
+        case "Lazy": {
+            const get = memoizeThunk(() => go(ast.f()))
+            return () => get()()
+        }
+
         case "Tuple": {
             const els = ast.elements.map((e) => go(e.type))
             return () => Semi.tuple(...els.map(e => e()))
