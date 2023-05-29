@@ -11,3 +11,8 @@ export const Category: S.Schema<Category> = S.lazy(() =>
         subcategories: S.array(Category),
     })
 );
+
+export enum Fruits {
+    Apple,
+    Banana,
+}

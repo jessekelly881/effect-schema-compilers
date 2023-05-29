@@ -5,7 +5,7 @@ import * as _ from "../src/equivalence"
 import * as Eq from "@effect/data/typeclass/Equivalence";
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
-import { Category } from "./schemas";
+import { Category, Fruits } from "./common";
 
 
 /**
@@ -64,6 +64,14 @@ describe("equivalence", () => {
 
         generatesValidEq(schema)
         expect(eq("a", "b")).toBe(false)
+    })
+
+    it("enum/ ", () => {
+        const schema = S.enums(Fruits)
+        const eq = _.to(schema)();
+
+        generatesValidEq(schema)
+        expect(eq(Fruits.Apple, Fruits.Banana)).toBe(false)
     })
 
     it("struct/ ", () => {

@@ -3,7 +3,7 @@ import * as S from "@effect/schema/Schema"
 import * as _ from "../src/faker";
 import * as F from '@faker-js/faker';
 import { pipe } from "@effect/data/Function";
-import { Category } from "./schemas";
+import { Fruits } from "./common";
 
 
 /**
@@ -12,11 +12,6 @@ import { Category } from "./schemas";
 const generatesValidValue = <I, A>(schema: S.Schema<I, A>) => {
     const fake = _.to(schema)(F.faker)
     expect(S.is(schema)(fake)).to.be.true
-}
-
-enum Fruits {
-    Apple,
-    Banana,
 }
 
 describe("faker", () => {

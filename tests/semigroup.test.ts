@@ -7,7 +7,7 @@ import * as n from "@effect/data/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
 import { to } from "../src/equivalence"
-import { Category } from "./schemas";
+import { Category, Fruits } from "./common";
 
 /**
  * Tests that the generated Semigroup for a given Schema is a valid Semigroup
@@ -33,6 +33,14 @@ describe("semigroup", () => {
         expect(ast).toEqual({
             [_.SemigroupHookId]: s
         })
+    })
+
+    it("literal/ ", () => {
+        const schema = S.literal("a", "b")
+        const { combine } = _.to(schema)()
+
+        generatesValidSemigroup(schema)
+        expect(combine("a", "b")).toBe("b")
     })
 
     it("number/ ", () => {
@@ -65,6 +73,14 @@ describe("semigroup", () => {
 
         generatesValidSemigroup(schema)
         expect(combine("a", "b")).toBe("ab")
+    })
+
+    it("enum/ ", () => {
+        const schema = S.enums(Fruits)
+        const { combine } = _.to(schema)()
+
+        generatesValidSemigroup(schema)
+        expect(combine(Fruits.Apple, Fruits.Banana)).toBe(Fruits.Banana)
     })
 
     it("tuple/ ", () => {

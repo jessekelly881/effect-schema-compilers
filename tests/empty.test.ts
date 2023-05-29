@@ -5,7 +5,7 @@ import * as _ from "../src/empty"
 import * as Eq from "../src/equivalence"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
-import { Category } from "./schemas";
+import { Category, Fruits } from "./common";
 
 /**
  * Tests that 
@@ -64,11 +64,6 @@ describe("empty", () => {
     });
 
     it("enum", () => {
-        enum Fruits {
-          Apple,
-          Banana,
-        }
-
         const schema = S.enums(Fruits)
         const empty = _.to(schema)()
 
