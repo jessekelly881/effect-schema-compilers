@@ -80,10 +80,12 @@ describe("empty", () => {
             S.string,
             S.transform(S.tuple(S.string), (s) => [s] as readonly string[], ([s]) => s))
 
-        const empty = _.to(schema)
+        const emptyFrom = _.from(schema)
+        const emptyTo = _.to(schema)
 
         testBidirectionality(schema)
-        expect(empty).toEqual([""])
+        expect(emptyFrom).toEqual("")
+        expect(emptyTo).toEqual([""])
     })
 
     it("tuple", () => {
@@ -166,7 +168,7 @@ describe("empty", () => {
         const schema = S.symbol
         const empty = _.to(schema)
 
-        // testBidirectionality(schema) // symbol eq is by ref not value
+        // testBidirectionality(schema) // symbol eq is by ref not value so testing for eq doesn't work
         expect(empty.toString()).toEqual(Symbol().toString())
     })
 
