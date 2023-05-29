@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.11
+
+### Patch Changes
+
+- e8fc86a: improved testing and lazy support
+
 ## 0.0.10
 
 ### Patch Changes
