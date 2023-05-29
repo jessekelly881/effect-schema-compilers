@@ -20,9 +20,9 @@ interface Equivalence<To> {
     (): Eq.Equivalence<To>
 }
 
-export const to = <I, A>(schema: S.Schema<I, A>): Eq.Equivalence<A> => go(AST.to(schema.ast))()
+export const to = <I, A>(schema: S.Schema<I, A>): Equivalence<A> => go(AST.to(schema.ast))
 
-export const from = <I, A>(schema: S.Schema<I, A>): Eq.Equivalence<I> => go(AST.from(schema.ast))()
+export const from = <I, A>(schema: S.Schema<I, A>): Equivalence<I> => go(AST.from(schema.ast))
 
 const go = (ast: AST.AST): Equivalence<any> => {
     const annotations = getAnnotation(ast)
@@ -38,7 +38,7 @@ const go = (ast: AST.AST): Equivalence<any> => {
         case "Literal": 
         case "Enums": 
         case "ObjectKeyword":  // FIXME: Should this be strict? 
-            return () => Eq.strict()
+            return Eq.strict
 
         case "BigIntKeyword": return () => Eq.bigint
         case "NumberKeyword": return () => Eq.number

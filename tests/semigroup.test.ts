@@ -25,8 +25,8 @@ const Category: S.Schema<Category> = S.lazy(() =>
  */
 const generatesValidSemigroup = <I, A>(schema: S.Schema<I, A>) => {
     const arb = A.to(schema)(fc);
-    const eq = to(schema)
-    const { combine } = _.to(schema)
+    const eq = to(schema)()
+    const { combine } = _.to(schema)()
 
     const associativity = fc.property(arb, arb, arb, (a, b, c) => 
         eq(combine(combine(a, b), c), combine(a, combine(b, c)))
@@ -48,7 +48,7 @@ describe("semigroup", () => {
 
     it("number/ ", () => {
         const schema = pipe(S.number, S.nonNaN())
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine(1, 2)).toBe(2)
@@ -56,7 +56,7 @@ describe("semigroup", () => {
 
     it("number/ min", () => {
         const schema = pipe(S.number, S.nonNaN(), _.semigroup(Semi.min(n.Order)))
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine(1, 2)).toBe(1)
@@ -64,7 +64,7 @@ describe("semigroup", () => {
 
     it("string/ ", () => {
         const schema = S.string
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine("a", "b")).toBe("b")
@@ -72,7 +72,7 @@ describe("semigroup", () => {
 
     it("string/ concat", () => {
         const schema = pipe(S.string, _.semigroup(Semi.string))
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine("a", "b")).toBe("ab")
@@ -80,7 +80,7 @@ describe("semigroup", () => {
 
     it("tuple/ ", () => {
         const schema = S.tuple(S.string, S.string)
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine(["0", "1"], ["1", "2"])).toEqual(["1", "2"])
@@ -92,7 +92,7 @@ describe("semigroup", () => {
             _.semigroup(Semi.tuple(Semi.min(n.Order), Semi.max(n.Order)))
         )
 
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine([0, 1], [1, 2])).toEqual([0, 2])
@@ -100,7 +100,7 @@ describe("semigroup", () => {
 
     it("struct/ ", () => {
         const schema = S.struct({ a: pipe(S.number, S.nonNaN()), b: S.string, c: S.optional(S.boolean) });
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine({ a: 0, b: "0" }, { a: 1, b: "1" })).toEqual({ a: 1, b: "1" })
@@ -111,7 +111,7 @@ describe("semigroup", () => {
 
     it("boolean/ ", () => {
         const schema = S.boolean
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine(true, false)).toEqual(false)
@@ -119,7 +119,7 @@ describe("semigroup", () => {
 
     it("boolean/ any", () => {
         const schema = pipe(S.boolean, _.semigroup(Semi.booleanSome))
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine(true, false)).toEqual(true)
@@ -132,14 +132,14 @@ describe("semigroup", () => {
             c: S.boolean
         });
 
-        const { combine } = _.to(schema)
+        const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine({ a: 0, b: "0", c: true }, { a: 1, b: "1", c: false })).toEqual({ a: 0, b: "01", c: false })
     })
 
     it("lazy", () => {
-        const { combine } = _.to(Category)
+        const { combine } = _.to(Category)()
         const a: Category = { name: "a", subcategories: [{ name: "a1", subcategories: [] }] }
         const b: Category = { name: "b", subcategories: [] }
 

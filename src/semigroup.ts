@@ -20,9 +20,9 @@ interface Semigroup<A> {
  * @description 
  * Generates a Semigroup from a given Schema. By default all values implement Semigroup.last so by default values are just overridden.
  */
-export const to = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<A> => go(AST.to(schema.ast))()
+export const to = <I, A>(schema: S.Schema<I, A>): Semigroup<A> => go(AST.to(schema.ast))
 
-export const from = <I, A>(schema: S.Schema<I, A>): Semi.Semigroup<I> => go(AST.from(schema.ast))()
+export const from = <I, A>(schema: S.Schema<I, A>): Semigroup<I> => go(AST.from(schema.ast))
 
 const go = (ast: AST.AST): Semigroup<any>  => {
 

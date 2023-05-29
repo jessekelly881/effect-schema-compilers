@@ -14,9 +14,9 @@ const getAnnotation = AST.getAnnotation<() => unknown>(
   EmptyHookId
 )
 
-export const to = <I, A>(schema: S.Schema<I, A>): A => go(AST.to(schema.ast))()
+export const to = <I, A>(schema: S.Schema<I, A>): Empty<A> => go(AST.to(schema.ast))
 
-export const from = <I, A>(schema: S.Schema<I, A>): I => go(AST.from(schema.ast))()
+export const from = <I, A>(schema: S.Schema<I, A>): () => Empty<I> => go(AST.from(schema.ast))
 
 
 const go = (ast: AST.AST): Empty<any> => {

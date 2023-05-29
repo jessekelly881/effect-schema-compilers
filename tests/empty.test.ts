@@ -25,13 +25,13 @@ const Category: S.Schema<Category> = S.lazy(() =>
  * 2) empty(from(schema)) == encode(empty(to(schema)))
  */
 const testBidirectionality = <I, A>(schema: S.Schema<I, A>) => {
-    const emptyTo = _.to(schema);
-    const emptyFrom = _.from(schema);
+    const emptyTo = _.to(schema)();
+    const emptyFrom = _.from(schema)();
     const computedTo = S.decode(schema)(emptyFrom)
     const computedFrom = S.encode(schema)(emptyTo)
 
-    expect(Eq.to(schema)(computedTo, emptyTo)).to.be.true
-    expect(Eq.from(schema)(computedFrom, emptyFrom)).to.be.true
+    expect(Eq.to(schema)()(computedTo, emptyTo)).to.be.true
+    expect(Eq.from(schema)()(computedFrom, emptyFrom)).to.be.true
 
 }
 
@@ -47,13 +47,13 @@ describe("empty", () => {
 
     it("custom empty", () => {
         const schema = pipe(S.number, _.empty(() => 1))
-        const empty = _.to(schema);
+        const empty = _.to(schema)();
         expect(empty).toBe(1)
     })
 
     it("number", () => {
         const schema = S.number
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toBe(0)
@@ -61,7 +61,7 @@ describe("empty", () => {
 
     it("string", () => {
         const schema = S.string
-        const empty = _.to(schema);
+        const empty = _.to(schema)();
 
         testBidirectionality(schema)
         expect(empty).toBe("");
@@ -69,7 +69,7 @@ describe("empty", () => {
 
     it("boolean", () => {
         const schema = S.boolean
-        const empty = _.to(schema);
+        const empty = _.to(schema)();
 
         testBidirectionality(schema)
         expect(empty).toBe(false);
@@ -80,8 +80,8 @@ describe("empty", () => {
             S.string,
             S.transform(S.tuple(S.string), (s) => [s] as readonly string[], ([s]) => s))
 
-        const emptyFrom = _.from(schema)
-        const emptyTo = _.to(schema)
+        const emptyFrom = _.from(schema)()
+        const emptyTo = _.to(schema)()
 
         testBidirectionality(schema)
         expect(emptyFrom).toEqual("")
@@ -90,7 +90,7 @@ describe("empty", () => {
 
     it("tuple", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean))
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toEqual(["", 0])
@@ -98,7 +98,7 @@ describe("empty", () => {
 
     it("literal", () => {
         const schema = S.literal("a", "b");
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toBe("a")
@@ -106,7 +106,7 @@ describe("empty", () => {
 
     it("record", () => {
         const schema = S.record(S.string, S.number)
-        const empty = _.to(schema);
+        const empty = _.to(schema)();
 
         testBidirectionality(schema)
         expect(empty).toEqual({});
@@ -125,7 +125,7 @@ describe("empty", () => {
             g: pipe(S.string, _.empty(() => '/'))
           })
         )
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
     
         testBidirectionality(schema)
         expect(empty).toEqual({ a: "", b: 0, c: [], e: { f: [0, "literal"] }, g: "/" })
@@ -133,7 +133,7 @@ describe("empty", () => {
     
     it("struct - partial", () => {
         const schema = S.partial(S.struct({ a: S.string, b: S.number }))
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toEqual({})
@@ -145,7 +145,7 @@ describe("empty", () => {
           S.struct({ type: S.literal("b"), b: S.number })
         );
 
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toEqual({ type: "a", a: "" })
@@ -153,38 +153,38 @@ describe("empty", () => {
 
     it("template literal", () => {
         const schema = S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toBe("ab")
     })
 
     it("void", () => {
-        const empty = _.to(S.void)
+        const empty = _.to(S.void)()
         expect(empty).toBeUndefined()
     })
 
     it("symbol", () => {
         const schema = S.symbol
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         // testBidirectionality(schema) // symbol eq is by ref not value so testing for eq doesn't work
         expect(empty.toString()).toEqual(Symbol().toString())
     })
 
     it("any", () => {
-        const empty = _.to(S.any)
+        const empty = _.to(S.any)()
         expect(empty).toBeUndefined()
     })
 
     it("unknown", () => {
-        const empty = _.to(S.undefined)
+        const empty = _.to(S.undefined)()
         expect(empty).toBeUndefined()
     })
 
     it("lazy", () => {
         const schema = Category
-        const empty = _.to(schema)
+        const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toEqual({ name: "", subcategories: [] })

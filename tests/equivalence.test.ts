@@ -12,7 +12,7 @@ import * as A from "@effect/schema/Arbitrary";
  */
 const generatesValidEq = <I, A>(schema: S.Schema<I, A>) => {
     const arb = A.to(schema)(fc);
-    const eq = _.to(schema)
+    const eq = _.to(schema)()
 
     const reflexivity = fc.property(arb, a => eq(a, a))
     const symmetry = fc.property(arb, arb, (a, b) => eq(a, b) === eq(b, a))
@@ -48,21 +48,21 @@ describe("equivalence", () => {
 
     it("number/ ", () => {
         const schema = pipe(S.number, S.nonNaN())
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq(0,1)).toBe(false)
     })
 
     it("string/ ", () => {
-        const eq = _.to(S.string);
+        const eq = _.to(S.string)();
 
         generatesValidEq(S.string)
         expect(eq("", " ")).toBe(false)
     });
 
     it("boolean/ ", () => {
-        const eq = _.to(S.boolean);
+        const eq = _.to(S.boolean)();
 
         generatesValidEq(S.boolean)
         expect(eq(false, false)).toBe(true)
@@ -73,7 +73,7 @@ describe("equivalence", () => {
 
     it("literal/ ", () => {
         const schema = S.literal("a", "b")
-        const eq = _.to(schema);
+        const eq = _.to(schema)();
 
         generatesValidEq(schema)
         expect(eq("a", "b")).toBe(false)
@@ -92,7 +92,7 @@ describe("equivalence", () => {
           })
         )
 
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
     
         const val = { a: "", b: 0, c: [], e: { f: [0, "literal"] } } as const
 
@@ -107,7 +107,7 @@ describe("equivalence", () => {
         })
 
         const schema = pipe(person, _.equivalence((a, b) => a.id === b.id))
-        const eq = _.to(schema);
+        const eq = _.to(schema)();
 
         generatesValidEq(schema)
         expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
@@ -116,7 +116,7 @@ describe("equivalence", () => {
 
     it("template literal", () => {
         const schema = S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq("ab", "axb")).toBe(false)
@@ -124,7 +124,7 @@ describe("equivalence", () => {
 
     it("tuple/ ", () => {
         const schema = pipe(S.tuple(S.string, pipe(S.number, S.nonNaN())), S.rest(S.boolean))
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq(["", 1, false], ["", 1, true])).toEqual(false)
@@ -140,7 +140,7 @@ describe("equivalence", () => {
 
     it("symbol/ ", () => {
         const schema = S.symbol;
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
         const symbol = Symbol("test")
 
         generatesValidEq(schema)
@@ -149,7 +149,7 @@ describe("equivalence", () => {
 
     it("any/ ", () => {
         const schema = pipe(S.any, S.nonNaN());
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq(1, 1)).toEqual(true)
@@ -159,7 +159,7 @@ describe("equivalence", () => {
 
     it("unknown/ ", () => {
         const schema = S.unknown;
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq(1, 1)).toEqual(true)
@@ -176,8 +176,8 @@ describe("equivalence", () => {
           )
         );
 
-        const eqTo = _.to(schema)
-        const eqFrom = _.from(schema)
+        const eqTo = _.to(schema)()
+        const eqFrom = _.from(schema)()
 
         generatesValidEq(schema)
         expect(eqTo([""], [" "])).toEqual(false)
@@ -187,7 +187,7 @@ describe("equivalence", () => {
 
     it("record/ ", () => {
         const schema = S.record(S.string, pipe(S.number, S.nonNaN()))
-        const eq = _.to(schema);
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq({}, {})).toEqual(true);
@@ -196,7 +196,7 @@ describe("equivalence", () => {
 
     it("lazy/ ", () => {
         const schema = Category
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         // generatesValidEq(schema) // In theory works, but causes issues
         expect(eq({ name: "a", subcategories: [] }, { name: "a", subcategories: [] })).toEqual(true)
@@ -208,7 +208,7 @@ describe("equivalence", () => {
 
     it("union/ ", () => {
         const schema = S.union(pipe(S.number, S.nonNaN()), S.boolean)
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq(0, 1)).toEqual(false)
@@ -223,7 +223,7 @@ describe("equivalence", () => {
             S.struct({ type: S.literal("b"), b: S.number })
         )
 
-        const eq = _.to(schema)
+        const eq = _.to(schema)()
 
         generatesValidEq(schema)
         expect(eq({ type: "a", a: "" }, { type: "a", a: "" })).toEqual(true)
