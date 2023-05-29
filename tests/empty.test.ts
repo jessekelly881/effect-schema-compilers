@@ -75,6 +75,20 @@ describe("empty", () => {
         expect(empty).toBe(false);
     });
 
+    it("enum", () => {
+        enum Fruits {
+          Apple,
+          Banana,
+        }
+
+        const schema = S.enums(Fruits)
+        const empty = _.to(schema)()
+
+        testBidirectionality(schema)
+        expect(S.is(schema)(empty)).to.be.true
+        expect(empty).toBe(Fruits.Apple)
+    })
+
     it("transform", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
             S.string,

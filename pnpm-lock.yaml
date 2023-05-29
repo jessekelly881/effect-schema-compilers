@@ -4,6 +4,7 @@ specifiers:
   '@changesets/cli': ^2.26.0
   '@effect/data': ^0.12.3
   '@effect/schema': ^0.19.3
+  '@faker-js/faker': ^8.0.2
   build-utils: ^2.0.12
   fast-check: ^3.9.0
   husky: ^8.0.3
@@ -16,6 +17,9 @@ dependencies:
   '@effect/schema': 0.19.3
   build-utils: 2.0.12
   typescript: 5.0.4
+
+optionalDependencies:
+  '@faker-js/faker': 8.0.2
 
 devDependencies:
   '@changesets/cli': 2.26.0
@@ -452,6 +456,13 @@ packages:
     os: [win32]
     requiresBuild: true
     dev: true
+    optional: true
+
+  /@faker-js/faker/8.0.2:
+    resolution: {integrity: sha512-Uo3pGspElQW91PCvKSIAXoEgAUlRnH29sX2/p89kg7sP1m2PzCufHINd0FhTXQf6DYGiUlVncdSPa2F9wxed2A==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0, npm: '>=6.14.13'}
+    requiresBuild: true
+    dev: false
     optional: true
 
   /@manypkg/find-root/1.1.0:

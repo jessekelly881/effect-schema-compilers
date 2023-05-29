@@ -30,5 +30,8 @@
     "@effect/schema": "^0.19.3",
     "build-utils": "^2.0.12",
     "typescript": "^5.0.4"
+  },
+  "optionalDependencies": {
+    "@faker-js/faker": "^8.0.2"
   }
 }

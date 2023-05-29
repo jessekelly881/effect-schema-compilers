@@ -59,6 +59,7 @@ const go = (ast: AST.AST): Semigroup<any>  => {
         }
 
         case "Tuple": {
+            // TODO: Use rest elements
             const els = ast.elements.map((e) => go(e.type))
             return () => Semi.tuple(...els.map(e => e()))
         }
