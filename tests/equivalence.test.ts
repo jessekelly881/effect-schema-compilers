@@ -65,7 +65,10 @@ describe("equivalence", () => {
         const eq = _.to(S.boolean);
 
         generatesValidEq(S.boolean)
+        expect(eq(false, false)).toBe(true)
+        expect(eq(true, true)).toBe(true)
         expect(eq(true, false)).toBe(false)
+        expect(eq(false, true)).toBe(false)
     });
 
     it("literal/ ", () => {
@@ -195,6 +198,7 @@ describe("equivalence", () => {
         const schema = Category
         const eq = _.to(schema)
 
+        // generatesValidEq(schema) // In theory works, but causes issues
         expect(eq({ name: "a", subcategories: [] }, { name: "a", subcategories: [] })).toEqual(true)
         expect(eq(
             { name: "a", subcategories: [{ name: "b", subcategories: [] }] }, 
