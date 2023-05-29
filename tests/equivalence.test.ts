@@ -46,7 +46,7 @@ describe("equivalence", () => {
         })
     })
 
-    it("number", () => {
+    it("number/ ", () => {
         const schema = pipe(S.number, S.nonNaN())
         const eq = _.to(schema)
 
@@ -54,21 +54,21 @@ describe("equivalence", () => {
         expect(eq(0,1)).toBe(false)
     })
 
-    it("string", () => {
+    it("string/ ", () => {
         const eq = _.to(S.string);
 
         generatesValidEq(S.string)
         expect(eq("", " ")).toBe(false)
     });
 
-    it("boolean", () => {
+    it("boolean/ ", () => {
         const eq = _.to(S.boolean);
 
         generatesValidEq(S.boolean)
         expect(eq(true, false)).toBe(false)
     });
 
-    it("literal", () => {
+    it("literal/ ", () => {
         const schema = S.literal("a", "b")
         const eq = _.to(schema);
 
@@ -76,7 +76,7 @@ describe("equivalence", () => {
         expect(eq("a", "b")).toBe(false)
     })
 
-    it("struct", () => {
+    it("struct/ ", () => {
         const schema = pipe(
           S.struct({
             a: S.string,
@@ -119,7 +119,7 @@ describe("equivalence", () => {
         expect(eq("ab", "axb")).toBe(false)
     })
 
-    it("tuple", () => {
+    it("tuple/ ", () => {
         const schema = pipe(S.tuple(S.string, pipe(S.number, S.nonNaN())), S.rest(S.boolean))
         const eq = _.to(schema)
 
@@ -130,12 +130,12 @@ describe("equivalence", () => {
         expect(eq(["", 1], ["", 1, true])).toEqual(false)
     })
 
-    it("void", () => {
+    it("void/ ", () => {
         const schema = S.void;
         generatesValidEq(schema)
     })
 
-    it("symbol", () => {
+    it("symbol/ ", () => {
         const schema = S.symbol;
         const eq = _.to(schema)
         const symbol = Symbol("test")
@@ -144,8 +144,8 @@ describe("equivalence", () => {
         expect(eq(symbol, symbol)).toEqual(true)
     })
 
-    it("any", () => {
-        const schema = S.any;
+    it("any/ ", () => {
+        const schema = pipe(S.any, S.nonNaN());
         const eq = _.to(schema)
 
         generatesValidEq(schema)
@@ -154,7 +154,7 @@ describe("equivalence", () => {
         expect(eq(1, "1")).toEqual(false)
     })
 
-    it("unknown", () => {
+    it("unknown/ ", () => {
         const schema = S.unknown;
         const eq = _.to(schema)
 
@@ -163,7 +163,7 @@ describe("equivalence", () => {
         expect(eq("1", "1")).toEqual(true)
     })
 
-    it("transform", () => {
+    it("transform/ ", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
           S.string,
           S.transform(
@@ -182,27 +182,49 @@ describe("equivalence", () => {
         expect(eqFrom(" ", "")).toEqual(false)
     })
 
-    /*
-    it("lazy", () => {
-        const eq = _.to(Category)
+    it("record/ ", () => {
+        const schema = S.record(S.string, pipe(S.number, S.nonNaN()))
+        const eq = _.to(schema);
 
-        expect(eq({ name: "a", subcategories: [] }, { name: "a", subcategories: [] })).toEqual(true)
-    })
-
-    it("record", () => {
-        const empty = _.to(S.record(S.string, S.number));
-        expect(empty).toEqual({});
+        generatesValidEq(schema)
+        expect(eq({}, {})).toEqual(true);
+        expect(eq({ a: 1 }, { a: 1 })).toEqual(true);
     });
 
-    it("union - discriminated", () => {
-        const schema = S.union(
-        S.struct({ type: S.literal("a"), a: S.string }),
-        S.struct({ type: S.literal("b"), b: S.number })
-        )
+    it("lazy/ ", () => {
+        const schema = Category
+        const eq = _.to(schema)
 
-        const empty = _.to(schema)
-        expect(empty).toEqual({ type: "a", a: "" })
+        expect(eq({ name: "a", subcategories: [] }, { name: "a", subcategories: [] })).toEqual(true)
+        expect(eq(
+            { name: "a", subcategories: [{ name: "b", subcategories: [] }] }, 
+            { name: "a", subcategories: [{ name: "b", subcategories: [] }] })
+        ).toEqual(true)
     })
 
-    */
+    it("union/ ", () => {
+        const schema = S.union(pipe(S.number, S.nonNaN()), S.boolean)
+        const eq = _.to(schema)
+
+        generatesValidEq(schema)
+        expect(eq(0, 1)).toEqual(false)
+        expect(eq(false, true)).toEqual(false)
+        expect(eq(0, true)).toEqual(false)
+        expect(eq(1, false)).toEqual(false)
+    })
+
+    it("union/ discriminated", () => {
+        const schema = S.union(
+            S.struct({ type: S.literal("a"), a: S.string }),
+            S.struct({ type: S.literal("b"), b: S.number })
+        )
+
+        const eq = _.to(schema)
+
+        generatesValidEq(schema)
+        expect(eq({ type: "a", a: "" }, { type: "a", a: "" })).toEqual(true)
+        expect(eq({ type: "b", b: 1 }, { type: "b", b: 1 })).toEqual(true)
+        expect(eq({ type: "a", a: "" }, { type: "b", b: 1 })).toEqual(false)
+    })
+
 })
