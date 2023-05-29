@@ -1,5 +1,12 @@
 # @kellyjesse881/empty
 
+## 0.0.12
+
+### Patch Changes
+
+- a223646: added fakerjs compiler
+- c762d84: made to, from lazy after supplying schema
+
 ## 0.0.11
 
 ### Patch Changes
