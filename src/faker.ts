@@ -67,7 +67,7 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
                 const tail = RA.tailNonEmpty(ast.rest.value).map(e => go(e, depthLimit - 1));
 
                 return (f: F.Faker) => {
-                    const numToGen = f.number.int({ min: 0, max: 2 })
+                    const numToGen = f.number.int({ min: 0, max: 10 })
                     const restEls = depthLimitReached ? [] : RA.range(0, numToGen).map(() => head(f))
                     const postRestEls = tail.map(el => el(f))
 
