@@ -3,7 +3,8 @@ Compilers for @effect/schema. Currently in **alpha**; although, the api is prett
 
 ### Current TODOs
 - Convert to monorepo to allow supporting multiple compilers without dep issues. 
-- Create compiler for fakerjs
+- Create compiler for avro
+- Port JsonSchema and Typescript compilers from @effect/schema/test
 
 ## Empty
 
