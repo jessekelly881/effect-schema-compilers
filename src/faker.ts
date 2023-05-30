@@ -26,9 +26,12 @@ export const from = <I, A>(schema: S.Schema<I, A>): Faker<I> => go(AST.from(sche
 /**
  * @param depthLimit - Used to limit recursion and only generate elements of limited depth
  */
-const go = (ast: AST.AST, depthLimit = 5): Faker<any> => {
+const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
 
-    // Attempts to prevent stack overflows by limiting object complexity when stack limit reached.
+    /**
+     * Attempts to prevent reaching recursion limit by limiting object complexity when depth limit reached.
+     * The recursion limit can still be reached as no attempt to limit recursion is made if doing so would produce an invalid instance of the type. 
+     */
     const depthLimitReached = depthLimit <= 0; 
 
     const annotations = getAnnotation(ast)
