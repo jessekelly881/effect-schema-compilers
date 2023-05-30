@@ -24,12 +24,12 @@ export const to = <I, A>(schema: S.Schema<I, A>): Faker<A> => go(AST.to(schema.a
 export const from = <I, A>(schema: S.Schema<I, A>): Faker<I> => go(AST.from(schema.ast))
 
 /**
- * @param stackSize - Used to limit recursion and only generate elements of limited depth
+ * @param depthLimit - Used to limit recursion and only generate elements of limited depth
  */
-const go = (ast: AST.AST, stackSize = 5): Faker<any> => {
+const go = (ast: AST.AST, depthLimit = 5): Faker<any> => {
 
     // Attempts to prevent stack overflows by limiting object complexity when stack limit reached.
-    const stackLimitReached = stackSize <= 0; 
+    const depthLimitReached = depthLimit <= 0; 
 
     const annotations = getAnnotation(ast)
     if(annotations._tag === "Some") {
@@ -37,9 +37,9 @@ const go = (ast: AST.AST, stackSize = 5): Faker<any> => {
     }
 
     switch (ast._tag) {
-        case "Refinement": return go(ast.from, stackSize - 1)
-        case "Transform": return go(ast.to, stackSize - 1)
-        case "Declaration": return go(ast.type, stackSize - 1)
+        case "Refinement": return go(ast.from, depthLimit)
+        case "Transform": return go(ast.to, depthLimit)
+        case "Declaration": return go(ast.type, depthLimit)
 
         case "ObjectKeyword": return (f: F.Faker) => ({})
 
@@ -53,19 +53,19 @@ const go = (ast: AST.AST, stackSize = 5): Faker<any> => {
         case "SymbolKeyword": return (f: F.Faker) => Symbol(f.string.alpha())
         case "UniqueSymbol": return (f: F.Faker) => Symbol(f.string.alpha())
         case "Union": {
-            const u = ast.types.map(t => go(t, stackSize - 1))
+            const u = ast.types.map(t => go(t, depthLimit))
             return (f: F.Faker) => f.helpers.arrayElement(u.map(el => el(f)))
         }
         case "Tuple": {
-            const els = ast.elements.map((e) => go(e.type, stackSize - 1))
+            const els = ast.elements.map((e) => go(e.type, depthLimit - 1))
 
             if(O.isSome(ast.rest)) {
-                const head = go(RA.headNonEmpty(ast.rest.value), stackSize - 1);
-                const tail = RA.tailNonEmpty(ast.rest.value).map(e => go(e, stackSize - 1));
+                const head = go(RA.headNonEmpty(ast.rest.value), depthLimit - 1);
+                const tail = RA.tailNonEmpty(ast.rest.value).map(e => go(e, depthLimit - 1));
 
                 return (f: F.Faker) => {
                     const numToGen = f.number.int({ min: 0, max: 2 })
-                    const restEls = stackLimitReached ? [] : RA.range(0, numToGen).map(() => head(f))
+                    const restEls = depthLimitReached ? [] : RA.range(0, numToGen).map(() => head(f))
                     const postRestEls = tail.map(el => el(f))
 
                     return [...els.map(el => el(f)), ...restEls, ...postRestEls]
@@ -76,11 +76,11 @@ const go = (ast: AST.AST, stackSize = 5): Faker<any> => {
             }
         }
         case "Lazy": {
-            const get = memoizeThunk(() => go(ast.f(), stackSize - 1))
+            const get = memoizeThunk(() => go(ast.f(), depthLimit))
             return (f: F.Faker) => get()(f)
         }
         case "TypeLiteral": {
-            const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type, stackSize - 1))
+            const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type, depthLimit - 1))
 
             return (f: F.Faker) => {
                 const output: any = {};
@@ -90,7 +90,7 @@ const go = (ast: AST.AST, stackSize = 5): Faker<any> => {
                     const name = ps.name;
 
                     // whether to include prop if it is optional
-                    const includeOptional = stackLimitReached ? false : f.datatype.boolean(); 
+                    const includeOptional = depthLimitReached ? false : f.datatype.boolean(); 
                     if(!ps.isOptional || includeOptional) {
                         output[name] = propertySignaturesTypes[i](f);
                     }
