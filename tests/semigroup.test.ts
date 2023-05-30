@@ -83,24 +83,34 @@ describe("semigroup", () => {
         expect(combine(Fruits.Apple, Fruits.Banana)).toBe(Fruits.Banana)
     })
 
-    it("tuple/ ", () => {
-        const schema = S.tuple(S.string, S.string)
+    it("tuple/ e + r + e", () => {
+        const schema = pipe(S.tuple(S.string), S.rest(S.boolean), S.element(pipe(S.number, S.nonNaN())), S.element(S.boolean))
         const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
-        expect(combine(["0", "1"], ["1", "2"])).toEqual(["1", "2"])
+        expect(combine(["0", 0, false], ["1", 1, true])).toEqual(["1", 1, true])
+        expect(combine(["0", true, 0, false], ["1", 1, true])).toEqual(["1", 1, true])
+        expect(combine(["0", 0, false], ["1", true, 1, true])).toEqual(["1", true, 1, true])
+        expect(combine(["0", true, true, true, true, 0, false], ["1", false, false, 1, true])).toEqual(["1", false, false, 1, true])
     })
 
     it("tuple/ [min, max]", () => {
-        const schema = pipe(
-            S.tuple(pipe(S.number, S.nonNaN()), pipe(S.number, S.nonNaN())), 
-            _.semigroup(Semi.tuple(Semi.min(n.Order), Semi.max(n.Order)))
-        )
+        const A = pipe(S.number, S.nonNaN(), _.semigroup(Semi.min(n.Order))) 
+        const B = pipe(S.number, S.nonNaN(), _.semigroup(Semi.max(n.Order)))
 
+        const schema = S.tuple(A, B) 
         const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
         expect(combine([0, 1], [1, 2])).toEqual([0, 2])
+    })
+
+    it("array/ ", () => {
+        const schema = S.array(S.string);
+        const { combine } = _.to(schema)()
+
+        generatesValidSemigroup(schema)
+        expect(combine(["0", "1"], ["0", "1", "2"])).toEqual(["0", "1", "2"])
     })
 
     it("struct/ ", () => {

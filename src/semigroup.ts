@@ -2,6 +2,8 @@ import * as S from "@effect/schema/Schema"
 import * as Semi from "@effect/data/typeclass/Semigroup"
 import * as AST from "@effect/schema/AST"
 import { memoizeThunk } from "./common"
+import * as RA from "@effect/data/ReadonlyArray"
+import * as O from "@effect/data/Option"
 
 export const SemigroupHookId = "@effect/schema/annotation/SemigroupHookId" as const
 
@@ -61,7 +63,42 @@ const go = (ast: AST.AST): Semigroup<any>  => {
         case "Tuple": {
             // TODO: Use rest elements
             const els = ast.elements.map((e) => go(e.type))
-            return () => Semi.tuple(...els.map(e => e()))
+            const rest = ast.rest
+
+            return () => Semi.make((self: [], that: []) => {
+                let output: any = []
+
+                const es = els.map((e) => e());
+
+                // elements
+                for(let i = 0; i < es.length; i++) {
+                    const { combine } = es[i]
+                    const result = combine(self[i], that[i]);
+                    output.push(result)
+                }
+
+                if(O.isSome(rest)) {
+                    const head = go(RA.headNonEmpty(rest.value));
+                    const tail = RA.tailNonEmpty(rest.value).map((e) => go(e));
+                    const minLen = tail.length + els.length // min len of tuple
+
+                    // rest head
+                    const thatRestLen = that.length - minLen;
+
+                    for(let h = 0; h < thatRestLen; h ++) {
+                        output.push(that[els.length + h])
+                    }
+
+                    // rest tail
+                    for(let t = 0; t < tail.length; t++) {
+                        const { combine } = tail[t]()
+                        const result = combine(self[self.length - tail.length + t], that[that.length - tail.length + t]);
+                        output.push(result)
+                    }
+                }
+
+                return output
+            })
         }
 
         case "TypeLiteral": {
