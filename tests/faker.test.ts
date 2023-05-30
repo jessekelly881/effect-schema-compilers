@@ -64,4 +64,19 @@ describe("faker", () => {
         expect(S.is(schema)(fake)).to.be.true
     })
     */
+
+    it("example", () => { 
+        const Person = S.struct({
+            name: pipe(S.string, _.faker(f => f.person.fullName())),
+            age: pipe(S.number, _.faker(f => f.number.int({ min: 18, max: 120 }))),
+            sex: pipe(S.literal("male", "female"), _.faker(f => f.person.sexType()))
+        });
+
+        F.faker.seed(25) 
+        const fakeData = _.to(Person)(F.faker)
+        expect(fakeData).toEqual({ name: "Seth Gottlieb", age: 36, sex: "female" })
+
+        F.faker.seed() // Unset seed for later tests
+    })
+
 })
