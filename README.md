@@ -82,3 +82,22 @@ const eq = _.to(schema)();
 
 expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
 ```
+
+### Fakerjs
+
+Generates realistic objects from a Schema using [fakerjs](@fakerjs/faker). 
+
+```ts
+import * as F from '@faker-js/faker';
+import * as S from "@effect/schema/Schema"
+import { pipe } from "@effect/data/Function";
+import * as _ from "effect-schema-compilers/dist/faker";
+
+const Person = S.struct({
+    name: pipe(S.string, _.faker(f => f.person.fullName())),
+    age: pipe(S.number, _.faker(f => f.number.int({ min: 18, max: 120 }))),
+    sex: pipe(S.literal("male", "female"), _.faker(f => f.person.sexType()))
+});
+
+const fakeData = _.to(Person)(F.faker) // { name: "Seth Gottlieb", age: 36, sex: "female" }
+```
