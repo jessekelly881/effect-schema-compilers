@@ -1,5 +1,7 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
+import * as RA from "@effect/data/ReadonlyArray"
+import * as O from "@effect/data/Option"
 
 export const EmptyHookId = "@effect/schema/annotation/EmptyHookId" as const
 
@@ -31,7 +33,17 @@ const go = (ast: AST.AST): Empty<any> => {
         case "ObjectKeyword": return () => ({})
         case "Tuple": {
             const els = ast.elements.map((e) => go(e.type))
-            return () => els.map(el => el())
+            const rest = ast.rest
+
+            if(O.isSome(rest)) {
+                return () => {
+                    const tail = RA.tailNonEmpty(rest.value).map(e => go(e));
+                    return [...els.map(el => el()), ...tail.map(el => el())]
+                }
+            }
+            else{
+                return () => els.map(el => el())
+            }
         }
         case "BigIntKeyword": return () => 0n
         case "NumberKeyword": return () => 0

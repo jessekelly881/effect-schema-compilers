@@ -85,12 +85,21 @@ describe("empty", () => {
         expect(emptyTo).toEqual([""])
     })
 
-    it("tuple", () => {
+    it("tuple/ e + r", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean))
         const empty = _.to(schema)()
 
         testBidirectionality(schema)
         expect(empty).toEqual(["", 0])
+    })
+
+    it("tuple/ e + r + e", () => {
+        const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean), S.element(S.string))
+        const empty = _.to(schema)()
+
+        testBidirectionality(schema)
+        expect(S.is(schema)(empty)).to.be.true
+        expect(empty).toEqual(["", 0, ""])
     })
 
     it("literal", () => {
