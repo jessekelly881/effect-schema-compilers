@@ -53,8 +53,8 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
         case "NumberKeyword": return (f: F.Faker) => f.number.float()
         case "BigIntKeyword": return (f: F.Faker) => f.number.bigInt()
         case "StringKeyword": return (f: F.Faker) => f.string.sample()
-        case "SymbolKeyword": return (f: F.Faker) => Symbol(f.string.alpha())
-        case "UniqueSymbol": return (f: F.Faker) => Symbol(f.string.alpha())
+        case "SymbolKeyword": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
+        case "UniqueSymbol": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
         case "Union": {
             const u = ast.types.map(t => go(t, depthLimit))
             return (f: F.Faker) => f.helpers.arrayElement(u.map(el => el(f)))

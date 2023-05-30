@@ -24,6 +24,7 @@ describe("faker", () => {
     it("union", () => generatesValidValue(S.union(S.number, S.string)))
     it("record", () => generatesValidValue(S.record(S.string, S.number)));
     it("enum", () => generatesValidValue(S.enums(Fruits)))
+    it("array", () => generatesValidValue(S.array(S.string)))
 
     it("transform", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
