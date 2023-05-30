@@ -3,7 +3,7 @@ import * as S from "@effect/schema/Schema"
 import * as _ from "../src/faker";
 import * as F from '@faker-js/faker';
 import { pipe } from "@effect/data/Function";
-import { Fruits } from "./common";
+import { Category, Fruits } from "./common";
 
 
 /**
@@ -56,14 +56,13 @@ describe("faker", () => {
         generatesValidValue(schema)
     })
 
-    /*
     it("lazy", () => {
         const schema = Category
         const fake = _.to(schema)(F.faker)
 
+        generatesValidValue(schema)
         expect(S.is(schema)(fake)).to.be.true
     })
-    */
 
     it("example", () => { 
         const Person = S.struct({
