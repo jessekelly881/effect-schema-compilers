@@ -52,24 +52,33 @@ const go = (ast: AST.AST): Equivalence<any> => {
 
         case "Tuple": { 
             const elements = ast.elements.map((e) => go(e.type));
-            const rest = pipe(ast.rest, O.map(RA.mapNonEmpty((e) => go(e))), O.getOrElse(() => []))
 
-            return () => {
-                const eq = (self: [], that: []) => {
-                    if(self.length !== that.length) return false
+            if(O.isSome(ast.rest)) { 
+                const head = go(RA.headNonEmpty(ast.rest.value));
+                const tail = RA.tailNonEmpty(ast.rest.value).map(e => go(e));
+                const requiredElementsCount = elements.length + tail.length
+
+                return () => (self: [], that: []) => {
+                    if((self.length !== that.length) || (self.length < requiredElementsCount)) return false
 
                     for(let i = 0; i < self.length; i++){
                         if(i < elements.length) {
                             if(!elements[i]()(self[i], that[i])) return false
                         }
                         else {
-                            if(!rest[0]()(self[i], that[i])) return false
+                            const remainingElements = self.length - i;
+                            const matchesHead = head()(self[i], that[i]);
+                            const matches = remainingElements <= tail.length ? tail[tail.length - remainingElements]()(self[i], that[i]) : matchesHead
+
+                            if(!matches) return false
                         }
                     }
 
                     return true;
                 }
-                return eq
+            }
+            else{
+                return () => Eq.tuple(...elements.map(e => e()))
             }
         }
         case "Refinement": return go(ast.from)
