@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.13
+
+### Patch Changes
+
+- 6ea24c7: added fakerjs
+
 ## 0.0.12
 
 ### Patch Changes
