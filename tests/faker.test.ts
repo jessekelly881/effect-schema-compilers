@@ -32,16 +32,25 @@ describe("faker", () => {
     it("templateLiteral. a${string}", () => generatesValidValue(S.templateLiteral(S.literal("a"), S.string)))
     it("templateLiteral. a${string}b", () => generatesValidValue(S.templateLiteral(S.literal("a"), S.string, S.literal("b"))))
 
-    it("templateLiteral. a${string}b w/ custom", () => {
+    it("templateLiteral. a${string*}b", () => {
         const schema = S.templateLiteral(
             S.literal("a"), 
             pipe(S.string, _.faker(f => f.string.alpha({ length: { min: 0, max: 10 } }))), 
             S.literal("b")
         );
 
-        // const fake = _.to(schema)(F.faker)
-        // console.log(fake)
+        generatesValidValue(schema)
+    });
 
+    /*
+    it("minLength", () => {
+        const schema = pipe(S.string, S.minLength(30))
+        generatesValidValue(schema)
+    })
+    */
+
+    it("record. <a${string}b, number>", () => {
+        const schema = S.record(S.templateLiteral(S.literal("a"), S.string, S.literal("b")), S.number)
         generatesValidValue(schema)
     });
 

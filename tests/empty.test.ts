@@ -36,6 +36,7 @@ describe("empty", () => {
     it("any", () => expectEmptyValues(S.any, undefined, undefined))
     it("unknown", () => expectEmptyValues(S.unknown, undefined, undefined))
     it("number", () => expectEmptyValues(S.number, 0, 0))
+    it("bigint", () => expectEmptyValues(S.bigint, 0n, 0n))
     it("string", () => expectEmptyValues(S.string, "", ""));
     it("boolean", () => expectEmptyValues(S.boolean, false, false));
     it("enum", () => expectEmptyValues(S.enums(Fruits), Fruits.Apple, Fruits.Apple))
@@ -49,6 +50,12 @@ describe("empty", () => {
     it("templateLiteral. ${string}", () => expectEmptyValues(S.templateLiteral(S.string) , "", ""))
     it("templateLiteral. a${string}", () => expectEmptyValues(S.templateLiteral(S.literal("a"), S.string) , "a", "a"))
     it("templateLiteral. a${string}b", () => expectEmptyValues(S.templateLiteral(S.literal("a"), S.string, S.literal("b")) , "ab", "ab"))
+
+    // filters
+    it("number/ greaterThan", () => expectEmptyValues(pipe(S.number, S.greaterThan(4)), 0, 4))
+    it("number/ int, greaterThan", () => expectEmptyValues(pipe(S.number, S.int(), S.greaterThan(4)), 0, 5))
+    it("number/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.number, S.greaterThanOrEqualTo(4)), 0, 4))
+    it("string/ minLength", () => expectEmptyValues(pipe(S.string, S.minLength(2)), "", "  "))
 
     it("ast", () => {
         const fn = () => 0

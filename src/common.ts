@@ -1,3 +1,7 @@
+import * as AST from "@effect/schema/AST"
+import * as S from "@effect/schema/Schema"
+import { isNumber } from "@effect/data/Predicate"
+
 /** 
  * TODO: Replace with import from "@effect/schema/internal/common" when working
  */
@@ -13,3 +17,130 @@ export const memoizeThunk = <A>(f: () => A): () => A => {
       return a
     }
   }
+
+class NumberConstraints {
+    readonly _tag = "NumberConstraints"
+    constructor(readonly constraints: { 
+        min?:number, 
+		exclusiveMin?: number, 
+		exclusiveMax?: number, 
+		max?:number, 
+		isInt?: boolean 
+	}) {}
+}
+
+class StringConstraints {
+    readonly _tag = "StringConstraints"
+    constructor(readonly constraints: { 
+        minLength?:number, 
+		maxLength?:number, 
+	}) {}
+}
+
+export type Constraints = NumberConstraints | StringConstraints
+
+export const getConstraints = (ast: AST.Refinement): Constraints | undefined => {
+  const TypeAnnotationId = ast.annotations[AST.TypeAnnotationId];
+  const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
+
+  switch (TypeAnnotationId) {
+    case S.GreaterThanTypeId:
+      return new NumberConstraints({
+        exclusiveMin: jsonSchema.exclusiveMinimum,
+      });
+    case S.GreaterThanOrEqualToTypeId:
+      return new NumberConstraints({ min: jsonSchema.minimum });
+    case S.LessThanTypeId:
+      return new NumberConstraints({
+        exclusiveMax: jsonSchema.exclusiveMaximum,
+      });
+    case S.LessThanOrEqualToTypeId:
+      return new NumberConstraints({ max: jsonSchema.maximum });
+    case S.PositiveTypeId:
+      return new NumberConstraints({ exclusiveMin: 0 });
+    case S.NonNegativeTypeId:
+      return new NumberConstraints({ min: 0 });
+    case S.NegativeTypeId:
+      return new NumberConstraints({ exclusiveMax: 0 });
+    case S.NonPositiveTypeId:
+      return new NumberConstraints({ max: 0 });
+    case S.IntTypeId:
+      return new NumberConstraints({ isInt: true });
+    case S.BetweenTypeId:
+      return new NumberConstraints({
+        min: jsonSchema.minimum,
+        max: jsonSchema.maximum,
+      });
+    case S.MinLengthTypeId:
+      return new StringConstraints({ minLength: jsonSchema.minLength });
+    case S.MaxLengthTypeId:
+      return new StringConstraints({ maxLength: jsonSchema.maxLength });
+  }
+}
+
+export const combineConstraints = (
+  c1: Constraints | undefined,
+  c2: Constraints | undefined
+): Constraints | undefined => {
+  if (c1 === undefined) {
+    return c2;
+  }
+  if (c2 === undefined) {
+    return c1;
+  }
+  switch (c1._tag) {
+    case "NumberConstraints": {
+      switch (c2._tag) {
+        case "NumberConstraints": {
+          const out = new NumberConstraints({
+            ...(c1.constraints as NumberConstraints["constraints"]),
+            ...(c2.constraints as NumberConstraints["constraints"]),
+          }); 
+
+          const min = getMax(c1.constraints.min, c2.constraints.min);
+          if (isNumber(min)) {
+            out.constraints.min = min;
+          }
+          const max = getMin(c1.constraints.max, c2.constraints.max);
+          if (isNumber(max)) {
+            out.constraints.max = max;
+          }
+          return out;
+        }
+      }
+      break;
+    }
+    case "StringConstraints": {
+      switch (c2._tag) {
+        case "StringConstraints": {
+          const out = new StringConstraints({
+            ...(c1.constraints as StringConstraints["constraints"]),
+            ...(c2.constraints as StringConstraints["constraints"]),
+          }); 
+          const min = getMax(
+            c1.constraints.minLength,
+            c2.constraints.minLength
+          );
+          if (isNumber(min)) {
+            out.constraints.minLength = min;
+          }
+          const max = getMin(
+            c1.constraints.maxLength,
+            c2.constraints.maxLength
+          );
+          if (isNumber(max)) {
+            out.constraints.maxLength = max;
+          }
+          return out;
+        }
+      }
+      break;
+    }
+  }
+};
+
+const getMax = (n1: number | undefined, n2: number | undefined): number | undefined =>
+  n1 === undefined ? n2 : n2 === undefined ? n1 : Math.max(n1, n2)
+
+const getMin = (n1: number | undefined, n2: number | undefined): number | undefined =>
+  n1 === undefined ? n2 : n2 === undefined ? n1 : Math.min(n1, n2)

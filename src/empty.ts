@@ -2,6 +2,8 @@ import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
 import * as RA from "@effect/data/ReadonlyArray"
 import * as O from "@effect/data/Option"
+import { Constraints, combineConstraints, getConstraints } from "./common"
+
 
 export const EmptyHookId = "@effect/schema/annotation/EmptyHookId" as const
 
@@ -20,8 +22,8 @@ export const to = <I, A>(schema: S.Schema<I, A>): Empty<A> => go(AST.to(schema.a
 
 export const from = <I, A>(schema: S.Schema<I, A>): Empty<I> => go(AST.from(schema.ast))
 
-
-const go = (ast: AST.AST): Empty<any> => {
+/** @internal */
+const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
 
     const annotations = getAnnotation(ast)
     if(annotations._tag === "Some") {
@@ -48,10 +50,23 @@ const go = (ast: AST.AST): Empty<any> => {
             }
         }
         case "BigIntKeyword": return () => 0n
-        case "NumberKeyword": return () => 0
-        case "StringKeyword": return () => ""
+        case "NumberKeyword": return () => {
+            if(constraints && constraints._tag === "NumberConstraints") {
+                if(constraints.constraints.min) return constraints.constraints.min
+                if(constraints.constraints.exclusiveMin) 
+                    return constraints.constraints.isInt ? constraints.constraints.exclusiveMin + 1 : constraints.constraints.exclusiveMin
+            }
+
+            return 0
+        }
+        case "StringKeyword": return () => {
+            return constraints && constraints._tag === "StringConstraints" 
+                ? constraints.constraints.minLength
+                ? " ".repeat(constraints.constraints.minLength)
+                : "" : ""
+        }
         case "BooleanKeyword": return () => false
-        case "Refinement": return go(ast.from)
+        case "Refinement": return go(ast.from, combineConstraints(constraints, getConstraints(ast)))
         case "Transform": return go(ast.to)
         case "Declaration": return go(ast.type)
         case "Enums": return () => ast.enums[0][1]

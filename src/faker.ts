@@ -47,8 +47,6 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
         case "Declaration": return go(ast.type, depthLimit)
 
         case "ObjectKeyword": return (f: F.Faker) => ({})
-
-        // [ast.enums[1][1]]
         case "Enums": return (f: F.Faker) => f.helpers.arrayElement(ast.enums.map(e => e[1]))
         case "Literal": return (f: F.Faker) => f.helpers.arrayElement([ast.literal])
         case "BooleanKeyword": return (f: F.Faker) => f.datatype.boolean()
@@ -96,10 +94,14 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
         }
         case "TypeLiteral": {
             const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type, depthLimit - 1))
+            const indexSignatures = ast.indexSignatures.map((is) =>
+                [go(is.parameter), go(is.type)] as const
+            )
 
             return (f: F.Faker) => {
-                const output: any = {};
+                let output: any = {};
 
+                // handle property signatureIs
                 for (let i = 0; i < propertySignaturesTypes.length; i++) {
                     const ps = ast.propertySignatures[i];
                     const name = ps.name;
@@ -109,6 +111,14 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
                     if(!ps.isOptional || includeOptional) {
                         output[name] = propertySignaturesTypes[i](f);
                     }
+                }
+
+                // index signatures
+                for (let i = 0; i < indexSignatures.length; i++) {
+                    const parameter = indexSignatures[i][0](f)
+                    const type = indexSignatures[i][1](f)
+
+                    output[parameter] = type
                 }
 
                 return output
