@@ -55,6 +55,16 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
         case "StringKeyword": return (f: F.Faker) => f.string.sample()
         case "SymbolKeyword": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
         case "UniqueSymbol": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
+        case "TemplateLiteral": {
+            return (f: F.Faker) => {
+                const components = [ast.head]
+                for (const span of ast.spans) {
+                    components.push(go(span.type, depthLimit - 1)(f))
+                    components.push(span.literal)
+                }
+                return components.join("")
+            }
+        }
         case "Union": {
             const u = ast.types.map(t => go(t, depthLimit))
             return (f: F.Faker) => f.helpers.arrayElement(u.map(el => el(f)))

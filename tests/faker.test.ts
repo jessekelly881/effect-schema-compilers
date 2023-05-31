@@ -26,6 +26,25 @@ describe("faker", () => {
     it("enum", () => generatesValidValue(S.enums(Fruits)))
     it("array", () => generatesValidValue(S.array(S.string)))
 
+    it("templateLiteral. a", () => generatesValidValue(S.templateLiteral(S.literal("a"))))
+    it("templateLiteral. a b", () => generatesValidValue(S.templateLiteral(S.literal("a"), S.literal(" "), S.literal("b"))))
+    it("templateLiteral. ${string}", () => generatesValidValue(S.templateLiteral(S.string)))
+    it("templateLiteral. a${string}", () => generatesValidValue(S.templateLiteral(S.literal("a"), S.string)))
+    it("templateLiteral. a${string}b", () => generatesValidValue(S.templateLiteral(S.literal("a"), S.string, S.literal("b"))))
+
+    it("templateLiteral. a${string}b w/ custom", () => {
+        const schema = S.templateLiteral(
+            S.literal("a"), 
+            pipe(S.string, _.faker(f => f.string.alpha({ length: { min: 0, max: 10 } }))), 
+            S.literal("b")
+        );
+
+        // const fake = _.to(schema)(F.faker)
+        // console.log(fake)
+
+        generatesValidValue(schema)
+    });
+
     it("transform", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
             S.string,
