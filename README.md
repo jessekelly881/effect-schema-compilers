@@ -84,7 +84,7 @@ const eq = _.to(schema)();
 expect(eq({ id: "1", a: "a" }, { id: "1", a: "b" })).toEqual(true)
 ```
 
-### Fakerjs
+## Fakerjs
 
 Generates realistic objects from a Schema using [fakerjs](@fakerjs/faker). 
 
