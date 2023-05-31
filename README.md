@@ -96,7 +96,7 @@ import * as _ from "effect-schema-compilers/dist/faker";
 
 const Person = S.struct({
     name: pipe(S.string, _.faker(f => f.person.fullName())),
-    age: pipe(S.number, _.faker(f => f.number.int({ min: 18, max: 120 }))),
+    age: pipe(S.number, S.int(), S.greaterThanOrEqualTo(18), S.lessThanOrEqualTo(120)),
     sex: pipe(S.literal("male", "female"), _.faker(f => f.person.sexType()))
 });
 
