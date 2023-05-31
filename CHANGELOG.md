@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.14
+
+### Patch Changes
+
+- 3756db4: added support for filters
+
 ## 0.0.13
 
 ### Patch Changes
