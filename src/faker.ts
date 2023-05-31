@@ -5,7 +5,7 @@ import * as O from "@effect/data/Option"
 import { pipe } from "@effect/data/Function";
 import * as RA from "@effect/data/ReadonlyArray"
 import { Constraints, combineConstraints, getConstraints, memoizeThunk } from "./common"
-import { isNumber } from "@effect/data/Predicate";
+import { isBigint, isNumber } from "@effect/data/Predicate";
 
 export const FakerHookId = "effect-schema-compilers/faker/FakerHookId" as const
 
@@ -67,7 +67,23 @@ const go = (ast: AST.AST, depthLimit = 10, constraints?: Constraints): Faker<any
 
             return f.number.float()
         }
-        case "BigIntKeyword": return (f: F.Faker) => f.number.bigInt()
+        case "BigIntKeyword": return (f: F.Faker) => {
+            if(constraints && constraints._tag === "BigintConstraints") {
+                const c = constraints.constraints
+
+                const min = c.min ?? c.exclusiveMin
+                const max = c.max ?? c.exclusiveMax
+
+                const val = f.number.bigInt({ 
+                    min: isBigint(c.exclusiveMin) ? min + 1n : min, 
+                    max: isBigint(c.exclusiveMax) ? max - 1n : max 
+                }) 
+
+                return val
+            }
+
+            return f.number.bigInt()
+        }
         case "StringKeyword": return (f: F.Faker) => {
             const c = constraints;
 

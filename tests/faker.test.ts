@@ -47,6 +47,7 @@ describe("faker", () => {
     it("number/ (0, 5)", () => generatesValidValue(pipe(S.number, S.greaterThan(0), S.lessThan(5))))
     it("number/ int (0, 5)", () => generatesValidValue(pipe(S.number, S.int(), S.greaterThan(0), S.lessThan(5))))
     it("number/ int [0, 5]", () => generatesValidValue(pipe(S.number, S.int(), S.greaterThanOrEqualTo(0), S.lessThanOrEqualTo(5))))
+    it("bigint/ (0, 5)", () => generatesValidValue(pipe(S.bigint, S.greaterThanBigint(0n), S.lessThanBigint(5n))))
     it("string/ minLength, maxLength", () => generatesValidValue(pipe(S.string, S.minLength(30), S.maxLength(50))))
 
 

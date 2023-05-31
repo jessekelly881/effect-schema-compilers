@@ -49,7 +49,15 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
                 return () => els.map(el => el())
             }
         }
-        case "BigIntKeyword": return () => 0n
+        case "BigIntKeyword": return () => {
+            if(constraints && constraints._tag === "BigintConstraints") {
+                if(constraints.constraints.min) return constraints.constraints.min
+                if(constraints.constraints.exclusiveMin) 
+                    return constraints.constraints.exclusiveMin + 1n
+            }
+
+            return 0n
+        }
         case "NumberKeyword": return () => {
             if(constraints && constraints._tag === "NumberConstraints") {
                 if(constraints.constraints.min) return constraints.constraints.min

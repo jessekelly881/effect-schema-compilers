@@ -53,8 +53,10 @@ describe("empty", () => {
 
     // filters
     it("number/ greaterThan", () => expectEmptyValues(pipe(S.number, S.greaterThan(4)), 0, 4))
-    it("number/ int, greaterThan", () => expectEmptyValues(pipe(S.number, S.int(), S.greaterThan(4)), 0, 5))
     it("number/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.number, S.greaterThanOrEqualTo(4)), 0, 4))
+    it("number/ int, greaterThan", () => expectEmptyValues(pipe(S.number, S.int(), S.greaterThan(4)), 0, 5))
+    it("bigint/ greaterThan", () => expectEmptyValues(pipe(S.bigint, S.greaterThanBigint(4n)), 0n, 5n))
+    it("bigint/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.bigint, S.greaterThanOrEqualToBigint(4n)), 0n, 4n))
     it("string/ minLength", () => expectEmptyValues(pipe(S.string, S.minLength(2)), "", "  "))
 
     it("ast", () => {
