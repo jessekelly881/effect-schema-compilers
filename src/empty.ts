@@ -34,7 +34,7 @@ const go = (ast: AST.AST): Empty<any> => {
         case "Literal": return () => ast.literal
         case "ObjectKeyword": return () => ({})
         case "Tuple": {
-            const els = ast.elements.map((e) => go(e.type))
+            const els = ast.elements.filter(e => !e.isOptional).map((e) => go(e.type))
             const rest = ast.rest
 
             if(O.isSome(rest)) {

@@ -83,6 +83,16 @@ describe("empty", () => {
         expectEmptyValues(schema, ["", 0], ["", 0])
     })
 
+    it("tuple. e + e?", () => {
+        const schema = pipe(S.tuple(S.string), S.optionalElement(S.number))
+        expectEmptyValues(schema, [""], [""])
+    })
+
+    it("tuple. e? + r", () => {
+        const schema = pipe(S.tuple(), S.optionalElement(S.string), S.rest(S.number))
+        expectEmptyValues(schema, [], [])
+    })
+
     it("tuple/ e + r + e", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean), S.element(S.string))
         expectEmptyValues(schema, ["", 0, ""], ["", 0, ""])
