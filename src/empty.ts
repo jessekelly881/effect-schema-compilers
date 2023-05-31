@@ -65,7 +65,7 @@ const go = (ast: AST.AST): Empty<any> => {
             return () => components.join("")
         }
         case "SymbolKeyword": return () => Symbol()
-        case "UniqueSymbol": return () => ast.symbol.toString()
+        case "UniqueSymbol": return () => ast.symbol
         case "TypeLiteral": {
             const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
             const output: any = {}

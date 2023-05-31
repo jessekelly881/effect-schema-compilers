@@ -78,6 +78,14 @@ describe("empty", () => {
         expectEmptyValues(schema, "", [""])
     })
 
+    it("uniqueSymbol", () => {
+        const a = Symbol.for("test/a")
+        const schema = S.uniqueSymbol(a)
+        const emptyTo = _.to(schema)();
+
+        expect(emptyTo.toString()).toEqual(a.toString())
+    })
+
     it("tuple/ e + r", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean))
         expectEmptyValues(schema, ["", 0], ["", 0])
