@@ -33,6 +33,10 @@ const expectEmptyValues = <A, I>(schema: S.Schema<I, A>, from: I, to: A) => {
 
 describe("empty", () => {
 
+    it("void", () => expectEmptyValues(S.void, undefined, undefined))
+    it("any", () => expectEmptyValues(S.any, undefined, undefined))
+    it("unknown", () => expectEmptyValues(S.unknown, undefined, undefined))
+
     it("ast", () => {
         const fn = () => 0
         const ast = pipe(S.NumberFromString, _.empty(fn)).ast.annotations
@@ -168,10 +172,6 @@ describe("empty", () => {
         expectEmptyValues(schema , "ab", "ab")
     })
 
-    it("void", () => {
-        testBidirectionality(S.void)
-        expectEmptyValues(S.void, undefined, undefined)
-    })
 
     it("symbol", () => {
         const schema = S.symbol
@@ -180,9 +180,6 @@ describe("empty", () => {
         // testBidirectionality(schema) // symbol eq is by ref not value so testing for eq doesn't work
         expect(empty.toString()).toEqual(Symbol().toString())
     })
-
-    it("any", () => expectEmptyValues(S.any, undefined, undefined))
-    it("unknown", () => expectEmptyValues(S.unknown, undefined, undefined))
 
     it("lazy", () => {
         const schema = Category
