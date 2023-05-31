@@ -18,9 +18,8 @@ const testBidirectionality = <I, A>(schema: S.Schema<I, A>) => {
     const computedTo = S.decode(schema)(emptyFrom)
     const computedFrom = S.encode(schema)(emptyTo)
 
-    expect(Eq.to(schema)()(computedTo, emptyTo)).to.be.true
-    expect(Eq.from(schema)()(computedFrom, emptyFrom)).to.be.true
-
+    expect(computedTo).toEqual(emptyTo)
+    expect(computedFrom).toEqual(emptyFrom)
 }
 
 const expectEmptyValues = <A, I>(schema: S.Schema<I, A>, from: I, to: A) => {
@@ -36,6 +35,20 @@ describe("empty", () => {
     it("void", () => expectEmptyValues(S.void, undefined, undefined))
     it("any", () => expectEmptyValues(S.any, undefined, undefined))
     it("unknown", () => expectEmptyValues(S.unknown, undefined, undefined))
+    it("number", () => expectEmptyValues(S.number, 0, 0))
+    it("string", () => expectEmptyValues(S.string, "", ""));
+    it("boolean", () => expectEmptyValues(S.boolean, false, false));
+    it("enum", () => expectEmptyValues(S.enums(Fruits), Fruits.Apple, Fruits.Apple))
+    it("literal", () => expectEmptyValues(S.literal("a", "b"), "a", "a"))
+    it("record", () => expectEmptyValues(S.record(S.string, S.number) , {}, {}));
+    it("array", () => expectEmptyValues(S.array(S.string) , [], []));
+    it("nonEmptyArray", () => expectEmptyValues(S.nonEmptyArray(S.string) , [""], [""]));
+    it("object", () => expectEmptyValues(S.object , {}, {}));
+
+    it("templateLiteral. a", () => expectEmptyValues(S.templateLiteral(S.literal("a")) , "a", "a"))
+    it("templateLiteral. ${string}", () => expectEmptyValues(S.templateLiteral(S.string) , "", ""))
+    it("templateLiteral. a${string}", () => expectEmptyValues(S.templateLiteral(S.literal("a"), S.string) , "a", "a"))
+    it("templateLiteral. a${string}b", () => expectEmptyValues(S.templateLiteral(S.literal("a"), S.string, S.literal("b")) , "ab", "ab"))
 
     it("ast", () => {
         const fn = () => 0
@@ -51,37 +64,9 @@ describe("empty", () => {
         );
     });
 
-    it("custom empty", () => {
+    it("custom", () => {
         const schema = pipe(S.number, _.empty(() => 1))
         expectEmptyValues(schema, 1, 1)
-    })
-
-    it("number", () => {
-        const schema = S.number
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema, 0, 0)
-    })
-
-    it("string", () => {
-        const schema = S.string
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema, "", "")
-    });
-
-    it("boolean", () => {
-        const schema = S.boolean
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema, false, false)
-    });
-
-    it("enum", () => {
-        const schema = S.enums(Fruits)
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema, Fruits.Apple, Fruits.Apple)
     })
 
     it("transform", () => {
@@ -89,44 +74,19 @@ describe("empty", () => {
             S.string,
             S.transform(S.tuple(S.string), (s) => [s] as readonly string[], ([s]) => s))
 
-        const emptyFrom = _.from(schema)()
-        const emptyTo = _.to(schema)()
-
         testBidirectionality(schema)
         expectEmptyValues(schema, "", [""])
     })
 
     it("tuple/ e + r", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean))
-        const empty = _.to(schema)()
-
-        testBidirectionality(schema)
         expectEmptyValues(schema, ["", 0], ["", 0])
     })
 
     it("tuple/ e + r + e", () => {
         const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean), S.element(S.string))
-        const empty = _.to(schema)()
-
-        testBidirectionality(schema)
         expectEmptyValues(schema, ["", 0, ""], ["", 0, ""])
     })
-
-    it("literal", () => {
-        const schema = S.literal("a", "b");
-        const empty = _.to(schema)()
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema, "a", "a")
-    })
-
-    it("record", () => {
-        const schema = S.record(S.string, S.number)
-        const empty = _.to(schema)();
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema , {}, {})
-    });
 
     it("struct", () => {
         const schema = pipe(
@@ -149,9 +109,6 @@ describe("empty", () => {
     
     it("struct - partial", () => {
         const schema = S.partial(S.struct({ a: S.string, b: S.number }))
-        const empty = _.to(schema)()
-
-        testBidirectionality(schema)
         expectEmptyValues(schema , {}, {})
     })
 
@@ -161,23 +118,13 @@ describe("empty", () => {
           S.struct({ type: S.literal("b"), b: S.number })
         );
 
-        testBidirectionality(schema)
         expectEmptyValues(schema , { type: "a", a: "" }, { type: "a", a: "" })
     })
-
-    it("template literal", () => {
-        const schema = S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
-
-        testBidirectionality(schema)
-        expectEmptyValues(schema , "ab", "ab")
-    })
-
 
     it("symbol", () => {
         const schema = S.symbol
         const empty = _.to(schema)()
 
-        // testBidirectionality(schema) // symbol eq is by ref not value so testing for eq doesn't work
         expect(empty.toString()).toEqual(Symbol().toString())
     })
 
