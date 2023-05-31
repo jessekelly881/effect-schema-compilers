@@ -42,12 +42,13 @@ describe("faker", () => {
         generatesValidValue(schema)
     });
 
-    /*
-    it("minLength", () => {
-        const schema = pipe(S.string, S.minLength(30))
-        generatesValidValue(schema)
-    })
-    */
+    // filters
+    it("number/ int", () => generatesValidValue(pipe(S.number, S.int())))
+    it("number/ (0, 5)", () => generatesValidValue(pipe(S.number, S.greaterThan(0), S.lessThan(5))))
+    it("number/ int (0, 5)", () => generatesValidValue(pipe(S.number, S.int(), S.greaterThan(0), S.lessThan(5))))
+    it("number/ int [0, 5]", () => generatesValidValue(pipe(S.number, S.int(), S.greaterThanOrEqualTo(0), S.lessThanOrEqualTo(5))))
+    it("string/ minLength, maxLength", () => generatesValidValue(pipe(S.string, S.minLength(30), S.maxLength(50))))
+
 
     it("record. <a${string}b, number>", () => {
         const schema = S.record(S.templateLiteral(S.literal("a"), S.string, S.literal("b")), S.number)

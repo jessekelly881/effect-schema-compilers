@@ -4,7 +4,8 @@ import type * as F from '@faker-js/faker';
 import * as O from "@effect/data/Option"
 import { pipe } from "@effect/data/Function";
 import * as RA from "@effect/data/ReadonlyArray"
-import { memoizeThunk } from "./common"
+import { Constraints, combineConstraints, getConstraints, memoizeThunk } from "./common"
+import { isNumber } from "@effect/data/Predicate";
 
 export const FakerHookId = "effect-schema-compilers/faker/FakerHookId" as const
 
@@ -26,7 +27,7 @@ export const from = <I, A>(schema: S.Schema<I, A>): Faker<I> => go(AST.from(sche
 /**
  * @param depthLimit - Used to limit recursion and only generate elements of limited depth
  */
-const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
+const go = (ast: AST.AST, depthLimit = 10, constraints?: Constraints): Faker<any> => {
 
     /**
      * Attempts to prevent reaching recursion limit by limiting object complexity when depth limit reached.
@@ -42,7 +43,7 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
     switch (ast._tag) {
         case "NeverKeyword": throw new Error("cannot build a Faker for `never`")
 
-        case "Refinement": return go(ast.from, depthLimit)
+        case "Refinement": return go(ast.from, depthLimit, combineConstraints(constraints, getConstraints(ast)))
         case "Transform": return go(ast.to, depthLimit)
         case "Declaration": return go(ast.type, depthLimit)
 
@@ -50,9 +51,35 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
         case "Enums": return (f: F.Faker) => f.helpers.arrayElement(ast.enums.map(e => e[1]))
         case "Literal": return (f: F.Faker) => f.helpers.arrayElement([ast.literal])
         case "BooleanKeyword": return (f: F.Faker) => f.datatype.boolean()
-        case "NumberKeyword": return (f: F.Faker) => f.number.float()
+        case "NumberKeyword": return (f: F.Faker) => {
+            if(constraints && constraints._tag === "NumberConstraints") {
+                const c = constraints.constraints
+
+                const min = c.min ?? c.exclusiveMin ?? Number.MIN_SAFE_INTEGER
+                const max = c.max ?? c.exclusiveMax ?? Number.MAX_SAFE_INTEGER
+
+                const val =  constraints.constraints.isInt 
+                    ? f.number.int({ min: isNumber(c.exclusiveMin) ? min + 1 : min, max: isNumber(c.exclusiveMax) ? max - 1 : max }) 
+                    : f.number.float({ min, max })
+
+                return val
+            }
+
+            return f.number.float()
+        }
         case "BigIntKeyword": return (f: F.Faker) => f.number.bigInt()
-        case "StringKeyword": return (f: F.Faker) => f.string.sample()
+        case "StringKeyword": return (f: F.Faker) => {
+            const c = constraints;
+
+            if(c && c._tag === "StringConstraints") {
+                const min = c.constraints.minLength ?? 0
+                const max = c.constraints.maxLength ?? min * 2 ?? 10
+                
+                return f.string.sample({ min, max })
+            }
+
+            return f.string.sample()
+        }
         case "SymbolKeyword": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
         case "UniqueSymbol": return (f: F.Faker) => Symbol(f.string.alphanumeric({ length: { min: 0, max: 10 } }))
         case "TemplateLiteral": {
