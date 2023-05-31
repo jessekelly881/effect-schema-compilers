@@ -3,6 +3,7 @@
   "version": "0.0.13",
   "description": "",
   "type": "module",
+  "homepage": "https://github.com/jessekelly881/effect-schema-compilers",
   "private": false,
   "files": [
     "dist/**"
