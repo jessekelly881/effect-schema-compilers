@@ -95,8 +95,6 @@ describe("faker", () => {
 
     it("struct - extra props", () => {
         const schema = pipe(S.struct({ a: S.string, b: S.number }), S.extend(S.record(S.symbol, S.string)))
-        const fake = _.to(schema)(F.faker)
-        console.log(fake)
         generatesValidValue(schema)
     })
 
@@ -112,12 +110,12 @@ describe("faker", () => {
         const Person = S.struct({
             name: pipe(S.string, _.faker(f => f.person.fullName())),
             age: pipe(S.number, S.int(), S.greaterThanOrEqualTo(18), S.lessThanOrEqualTo(120)),
-            sex: pipe(S.literal("male", "female"), _.faker(f => f.person.sexType()))
+            sex: pipe(S.literal("male", "female"))
         });
 
         F.faker.seed(25) 
         const fakeData = _.to(Person)(F.faker)
-        expect(fakeData).toEqual({ name: "Seth Gottlieb", age: 36, sex: "female" })
+        expect(fakeData).toEqual({ name: "Seth Gottlieb", age: 36, sex: "male" })
 
         F.faker.seed() // Unset seed for later tests
     })
