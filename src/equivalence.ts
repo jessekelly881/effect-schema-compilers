@@ -31,6 +31,8 @@ const go = (ast: AST.AST): Equivalence<any> => {
     }
 
     switch (ast._tag) {
+        case "NeverKeyword": throw new Error("cannot build an Equivalence for `never`")
+
         case "UndefinedKeyword":
         case "UnknownKeyword":
         case "VoidKeyword":
@@ -105,7 +107,4 @@ const go = (ast: AST.AST): Equivalence<any> => {
             };
         }
     }
-
-    throw new Error(`unhandled ${ast._tag}`)
-
 }

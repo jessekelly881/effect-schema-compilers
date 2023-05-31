@@ -45,6 +45,12 @@ describe("faker", () => {
         generatesValidValue(schema)
     });
 
+    it("never", () => {
+        expect(() => _.to(S.never)(F.faker)).toThrowError(
+            new Error("cannot build a Faker for `never`")
+        );
+    });
+
     it("transform", () => {
         const schema: S.Schema<string, readonly [string]> = pipe(
             S.string,

@@ -40,6 +40,8 @@ const go = (ast: AST.AST, depthLimit = 10): Faker<any> => {
     }
 
     switch (ast._tag) {
+        case "NeverKeyword": throw new Error("cannot build a Faker for `never`")
+
         case "Refinement": return go(ast.from, depthLimit)
         case "Transform": return go(ast.to, depthLimit)
         case "Declaration": return go(ast.type, depthLimit)

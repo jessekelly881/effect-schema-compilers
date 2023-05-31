@@ -41,6 +41,12 @@ describe("empty", () => {
         })
     })
 
+    it("never", () => {
+        expect(() => _.to(S.never)()).toThrowError(
+            new Error("cannot build an Empty for `never`")
+        );
+    });
+
     it("custom empty", () => {
         const schema = pipe(S.number, _.empty(() => 1))
         expectEmptyValues(schema, 1, 1)

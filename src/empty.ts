@@ -29,6 +29,8 @@ const go = (ast: AST.AST): Empty<any> => {
     }
 
     switch (ast._tag) {
+        case "NeverKeyword": throw new Error("cannot build an Empty for `never`")
+
         case "Literal": return () => ast.literal
         case "ObjectKeyword": return () => ({})
         case "Tuple": {
@@ -86,6 +88,4 @@ const go = (ast: AST.AST): Empty<any> => {
         case "AnyKeyword":
             return () => undefined
     }
-
-    throw new Error(`unhandled ${ast._tag}`)
 }

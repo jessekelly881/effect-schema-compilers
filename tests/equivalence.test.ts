@@ -33,6 +33,12 @@ describe("equivalence", () => {
         })
     })
 
+    it("never", () => {
+        expect(() => _.to(S.never)()).toThrowError(
+            new Error("cannot build an Equivalence for `never`")
+        );
+    });
+
     it("number/ ", () => {
         const schema = pipe(S.number, S.nonNaN())
         const eq = _.to(schema)()

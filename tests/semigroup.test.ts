@@ -35,6 +35,12 @@ describe("semigroup", () => {
         })
     })
 
+    it("never", () => {
+        expect(() => _.to(S.never)()).toThrowError(
+            new Error("cannot build a Semigroup for `never`")
+        );
+    });
+
     it("literal/ ", () => {
         const schema = S.literal("a", "b")
         const { combine } = _.to(schema)()

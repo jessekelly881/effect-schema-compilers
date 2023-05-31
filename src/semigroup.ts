@@ -34,6 +34,8 @@ const go = (ast: AST.AST): Semigroup<any>  => {
     }
 
     switch (ast._tag) {
+        case "NeverKeyword": throw new Error("cannot build a Semigroup for `never`")
+
         case "Literal": 
         case "ObjectKeyword": 
         case "BigIntKeyword": 
@@ -116,6 +118,4 @@ const go = (ast: AST.AST): Semigroup<any>  => {
             }
         }
     }
-
-    throw new Error(`unhandled ${ast._tag}`)
 }
