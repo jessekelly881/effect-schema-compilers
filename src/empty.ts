@@ -79,7 +79,7 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
         case "Declaration": return go(ast.type)
         case "Enums": return () => ast.enums[0][1]
         case "Union": return go(ast.types[0]) // TODO: Pick the "simplest" value
-        case "Lazy": return go(ast.f())
+        case "Lazy": return () => go(ast.f())()
         case "TemplateLiteral": {
             const components = [ast.head]
             for (const span of ast.spans) {

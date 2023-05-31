@@ -93,6 +93,13 @@ describe("faker", () => {
         generatesValidValue(schema)
     })
 
+    it("struct - extra props", () => {
+        const schema = pipe(S.struct({ a: S.string, b: S.number }), S.extend(S.record(S.symbol, S.string)))
+        const fake = _.to(schema)(F.faker)
+        console.log(fake)
+        generatesValidValue(schema)
+    })
+
     it("lazy", () => {
         const schema = Category
         const fake = _.to(schema)(F.faker)
