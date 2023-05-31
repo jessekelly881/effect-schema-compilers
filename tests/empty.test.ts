@@ -58,6 +58,7 @@ describe("empty", () => {
     it("bigint/ greaterThan", () => expectEmptyValues(pipe(S.bigint, S.greaterThanBigint(4n)), 0n, 5n))
     it("bigint/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.bigint, S.greaterThanOrEqualToBigint(4n)), 0n, 4n))
     it("string/ minLength", () => expectEmptyValues(pipe(S.string, S.minLength(2)), "", "  "))
+    it("array/ minItems", () => expectEmptyValues(pipe(S.array(S.string), S.minItems(2)), [], ["", ""]))
 
     it("ast", () => {
         const fn = () => 0

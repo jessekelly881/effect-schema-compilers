@@ -51,13 +51,27 @@ class StringConstraints {
 	}) {}
 }
 
-export type Constraints = NumberConstraints | StringConstraints | BigintConstraints
+class ArrayConstraints {
+    readonly _tag = "ArrayConstraints"
+    constructor(readonly constraints: { 
+        maxItems?:number, 
+		minItems?:number, 
+	}) {}
+}
 
+export type Constraints = NumberConstraints | StringConstraints | BigintConstraints | ArrayConstraints
+
+// MultipleOfTypeId
+// MinItemsTypeId 
+// MaxItemsTypeId
+// ItemsCountTypeId
 export const getConstraints = (ast: AST.Refinement): Constraints | undefined => {
   const TypeAnnotationId = ast.annotations[AST.TypeAnnotationId];
   const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
 
   switch (TypeAnnotationId) {
+
+	// Number
     case S.GreaterThanTypeId:
       return new NumberConstraints({
         exclusiveMin: jsonSchema.exclusiveMinimum,
@@ -86,6 +100,7 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
         max: jsonSchema.maximum,
       });
 
+	// Bigint
     case S.GreaterThanBigintTypeId:
       return new BigintConstraints({
         exclusiveMin: jsonSchema.exclusiveMinimum,
@@ -112,10 +127,19 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
         max: jsonSchema.maximum,
       });
 
+	// String
     case S.MinLengthTypeId:
       return new StringConstraints({ minLength: jsonSchema.minLength });
     case S.MaxLengthTypeId:
       return new StringConstraints({ maxLength: jsonSchema.maxLength });
+
+	// Array
+    case S.MaxItemsTypeId:
+      return new ArrayConstraints({ maxItems: jsonSchema.maxItems });
+    case S.MinItemsTypeId:
+      return new ArrayConstraints({ minItems: jsonSchema.minItems });
+    case S.ItemsCountTypeId:
+      return new ArrayConstraints({ minItems: jsonSchema.minItems, maxItems: jsonSchema.maxItems });
   }
 }
 

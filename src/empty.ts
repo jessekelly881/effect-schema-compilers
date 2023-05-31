@@ -39,10 +39,21 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
             const els = ast.elements.filter(e => !e.isOptional).map((e) => go(e.type))
             const rest = ast.rest
 
+            let minItems = 0;
+            if(constraints && constraints._tag === "ArrayConstraints") {
+                if(constraints.constraints.minItems) minItems = constraints.constraints.minItems;
+            }
+
             if(O.isSome(rest)) {
                 return () => {
+                    const head = go(RA.headNonEmpty(rest.value));
                     const tail = RA.tailNonEmpty(rest.value).map(e => go(e));
-                    return [...els.map(el => el()), ...tail.map(el => el())]
+                    const requiredElsCount = els.length + tail.length;
+                    const minRestSize = Math.max(minItems - requiredElsCount, 0)
+
+                    const restEls = minRestSize > 0 ? RA.range(1, minRestSize).map(() => head()) : []
+
+                    return [...els.map(el => el()), ...restEls, ...tail.map(el => el())]
                 }
             }
             else{
