@@ -120,8 +120,22 @@ const go = (ast: AST.AST, depthLimit = 10, constraints?: Constraints): Faker<any
                 const tail = RA.tailNonEmpty(ast.rest.value).map(e => go(e, depthLimit - 1));
 
                 return (f: F.Faker) => {
-                    const numToGen = f.number.int({ min: 0, max: 10 })
-                    const restEls = depthLimitReached ? [] : RA.range(0, numToGen).map(() => head(f))
+                    const requiredElsCount = els.length + tail.length;
+
+                    let min = 0, max = 10; // default max, min
+                    const c = constraints 
+                    if(c && c._tag === "ArrayConstraints") {
+                        if(c.constraints.maxItems) {
+                            max = c.constraints.maxItems ?? max;
+                        }
+                        if(c.constraints.minItems) {
+                            min = c.constraints.minItems ?? min;
+                        }
+                    }
+
+
+                    const numToGen = f.number.int({ min, max })
+                    const restEls = depthLimitReached ? [] : RA.range(0, numToGen - 1).map(() => head(f))
                     const postRestEls = tail.map(el => el(f))
 
                     return [...els.map(el => el(f)), ...restEls, ...postRestEls]
