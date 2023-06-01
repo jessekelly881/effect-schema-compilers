@@ -1,5 +1,12 @@
 # @kellyjesse881/empty
 
+## 0.0.15
+
+### Patch Changes
+
+- ac19e0e: added support for array filters
+- 064e797: added support for bigint filters
+
 ## 0.0.14
 
 ### Patch Changes
