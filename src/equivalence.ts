@@ -93,17 +93,42 @@ const go = (ast: AST.AST): Equivalence<any> => {
         }
         case "TypeLiteral": {
             const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
+            const indexSignatures = ast.indexSignatures.map((is) =>
+                [go(is.parameter), go(is.type)] as const
+            )
 
             return () => {
-                const output: any = {};
+                return <A extends Record<PropertyKey, any>>(self: A, that: A) => {
+                    const selfKeys = Object.keys(self);
+                    const thatKeys = Object.keys(that);
+                    const mergedKeys = Object.keys({...self, ...that});
 
-                for (let i = 0; i < propertySignaturesTypes.length; i++) {
-                    const ps = ast.propertySignatures[i];
-                    const name = ps.name;
-                    output[name] = propertySignaturesTypes[i]();
+                    const psNames = ast.propertySignatures.map(ps => ps.name)
+
+                    // have identical keys
+                    if(selfKeys.length !== thatKeys.length || thatKeys.length !== mergedKeys.length) return false
+
+                    for (let i = 0; i < propertySignaturesTypes.length; i++) {
+                        const ps = ast.propertySignatures[i];
+                        const name = ps.name;
+                        const eq = propertySignaturesTypes[i]();
+
+                        if(Object.hasOwn(self, name) && Object.hasOwn(that, name) && !eq(self[name], that[name])) return false
+                    }
+
+                    for (const selfKey in self) {
+                        for(const thatKey in that) {
+                            for(let i = 0; i < indexSignatures.length; i++) {
+                                const is = indexSignatures[i]
+                                const nameEq = is[0]()
+                                const valEq = is[1]()
+                                if(nameEq(selfKey, thatKey) && !valEq(self[selfKey], that[thatKey])) return false
+                            }
+                        }
+                    }
+
+                    return true
                 }
-
-                return Eq.struct(output);
             };
         }
     }
