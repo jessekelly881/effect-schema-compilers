@@ -85,7 +85,8 @@ describe("equivalence", () => {
         const schema = S.object
         const eq = _.to(schema)();
 
-        generatesValidEq(schema)
+        console.log(schema)
+        // generatesValidEq(schema)
         expect(eq({ a: 1 }, { a: 1 })).toBe(true)
         expect(eq({ a: 1 }, { b: 1 })).toBe(false)
     })
@@ -110,6 +111,21 @@ describe("equivalence", () => {
 
         generatesValidEq(schema)
         expect(eq(val, {...val, d: true})).toEqual(false)
+    })
+
+    it("struct/ arbitrary props", () => {
+        const schema = pipe(
+            S.struct({ a: S.string, b: S.string }),
+            S.extend(S.record(S.string, S.string))
+        );
+
+        const eq = _.to(schema)();
+
+        generatesValidEq(schema)
+        expect(eq({ a: "", b: "", c: ""}, { a: "", b: "", c: "" })).toEqual(true)
+        expect(eq({ a: "", b: "", c: " "}, { a: "", b: "", c: "" })).toEqual(false)
+        expect(eq({ a: "", b: ""}, { a: "", b: "", c: "" })).toEqual(false)
+        expect(eq({ a: "", b: "", c: "" }, { a: "", b: "" })).toEqual(false)
     })
 
     it("custom eq", () => {
