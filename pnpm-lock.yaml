@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@changesets/cli': ^2.26.0
   '@effect/data': ^0.12.3
-  '@effect/schema': ^0.19.3
+  '@effect/schema': ^0.20.0
   '@faker-js/faker': ^8.0.2
   build-utils: ^2.0.12
   fast-check: ^3.9.0
@@ -14,7 +14,7 @@ specifiers:
 
 dependencies:
   '@effect/data': 0.12.3
-  '@effect/schema': 0.19.3
+  '@effect/schema': 0.20.0
   build-utils: 2.0.12
   typescript: 5.0.4
 
@@ -246,17 +246,17 @@ packages:
     resolution: {integrity: sha512-Vwlju6FqLYKVzFeEbz75BmPXsOnEB4jU02pMi230aIT7Xy0UTMFcoOmp/MUVPrbv3t+E0qhhFEhyPwjdhCRo1Q==}
     dev: false
 
-  /@effect/io/0.25.13:
-    resolution: {integrity: sha512-NdZFSaNbG6AN8bzSAPdmi95AXgHWr4dH58R8viqbFBb0zmfQ/PQq+5XEsC++qy/qpT/ZLzpvJJWhW9jf1atq2g==}
+  /@effect/io/0.26.0:
+    resolution: {integrity: sha512-umwZ/sRoV7zb/8WwoiK7xWoypqvY6C1EXWEGORpViAFUTx3/bXc9i7JtdttTWVokXb3qogrxGX2SHopB20I4vQ==}
     dependencies:
       '@effect/data': 0.12.3
     dev: false
 
-  /@effect/schema/0.19.3:
-    resolution: {integrity: sha512-jR7o19HBX7PBYRLV1G6ZlM90giRe+lZkA6BqVNamkhNfVsHU4MnGr2lqM2H4fy4MgR744GGXuxCDjVdydkMvAw==}
+  /@effect/schema/0.20.0:
+    resolution: {integrity: sha512-uiqNI/xpXhER0blFzX/rPnCSjiW4zHQxVgiEctVRxK9Gz1Pa+VI/wsv5FJzjmiKprtIcmcLwD9NtU1akp5w42w==}
     dependencies:
       '@effect/data': 0.12.3
-      '@effect/io': 0.25.13
+      '@effect/io': 0.26.0
       fast-check: 3.9.0
     dev: false
 
