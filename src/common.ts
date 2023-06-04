@@ -46,8 +46,9 @@ class BigintConstraints {
 class StringConstraints {
     readonly _tag = "StringConstraints"
     constructor(readonly constraints: { 
-        minLength?:number, 
+    	minLength?:number, 
 		maxLength?:number, 
+		pattern?: RegExp
 	}) {}
 }
 
@@ -132,6 +133,8 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
       return new StringConstraints({ minLength: jsonSchema.minLength });
     case S.MaxLengthTypeId:
       return new StringConstraints({ maxLength: jsonSchema.maxLength });
+    case S.PatternTypeId:
+      return new StringConstraints({ pattern: jsonSchema.pattern });
 
 	// Array
     case S.MaxItemsTypeId:

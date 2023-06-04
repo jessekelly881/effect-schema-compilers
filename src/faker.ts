@@ -89,9 +89,10 @@ const go = (ast: AST.AST, depthLimit = 10, constraints?: Constraints): Faker<any
 
             if(c && c._tag === "StringConstraints") {
                 const min = c.constraints.minLength ?? 0
-                const max = c.constraints.maxLength ?? min * 2 ?? 10
-                
-                return f.string.sample({ min, max })
+                const max = c.constraints.maxLength
+                const pattern = c.constraints.pattern;
+
+                return c.constraints.pattern ? f.helpers.fromRegExp(pattern) : f.string.sample({ min, max })
             }
 
             return f.string.sample()
