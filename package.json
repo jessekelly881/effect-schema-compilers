@@ -8,6 +8,16 @@
   "files": [
     "dist/**"
   ],
+  "tags": [
+    "typescript",
+    "schema",
+    "validation"
+  ],
+  "keywords": [
+    "typescript",
+    "schema",
+    "validation"
+  ],
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",
