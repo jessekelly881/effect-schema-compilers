@@ -1,11 +1,11 @@
 import * as S from "@effect/schema/Schema"
 import * as Semi from "@effect/data/typeclass/Semigroup"
 import * as AST from "@effect/schema/AST"
-import { memoizeThunk } from "./common"
+import { createHookId, memoizeThunk } from "./common"
 import * as RA from "@effect/data/ReadonlyArray"
 import * as O from "@effect/data/Option"
 
-export const SemigroupHookId = "@effect/schema/annotation/SemigroupHookId" as const
+export const SemigroupHookId = createHookId("SemigroupHookId")
 
 export const semigroup = <I, A>(semigroup: Semi.Semigroup<A>): (self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [SemigroupHookId]: semigroup })

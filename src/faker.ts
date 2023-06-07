@@ -4,10 +4,10 @@ import type * as F from '@faker-js/faker';
 import * as O from "@effect/data/Option"
 import { pipe } from "@effect/data/Function";
 import * as RA from "@effect/data/ReadonlyArray"
-import { Constraints, combineConstraints, getConstraints, memoizeThunk } from "./common"
+import { Constraints, combineConstraints, createHookId, getConstraints, memoizeThunk } from "./common"
 import { isBigint, isNumber } from "@effect/data/Predicate";
 
-export const FakerHookId = "effect-schema-compilers/faker/FakerHookId" as const
+export const FakerHookId = createHookId("FakerHookId")
 
 interface Faker<A> {
     (faker: F.Faker): A

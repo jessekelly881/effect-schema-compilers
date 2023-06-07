@@ -4,11 +4,11 @@ import * as Eq from "@effect/data/typeclass/Equivalence";
 import { pipe } from "@effect/data/Function"
 import * as O from "@effect/data/Option"
 import * as RA from "@effect/data/ReadonlyArray"
-import { memoizeThunk } from "./common"
+import { createHookId, memoizeThunk } from "./common"
 import * as Equal from "@effect/data/Equal";
 
 
-export const EquivalenceHookId = "@effect/schema/annotation/EmptyHookId" as const
+export const EquivalenceHookId = createHookId("EquivalenceHookId")
 
 export const equivalence = <I, A>(eq: Eq.Equivalence<A>): (self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [EquivalenceHookId]: eq })

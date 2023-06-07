@@ -2,6 +2,8 @@ import * as AST from "@effect/schema/AST"
 import * as S from "@effect/schema/Schema"
 import { isNumber } from "@effect/data/Predicate"
 
+export const createHookId = <I extends string>(id: I) => `effect-schema-compilers/${id}` as const
+
 /** 
  * TODO: Replace with import from "@effect/schema/internal/common" when working
  */
