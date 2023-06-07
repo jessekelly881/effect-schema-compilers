@@ -1,6 +1,8 @@
 # effect-schema-compilers
 Compilers for @effect/schema. Currently in **alpha**; although, the api is pretty simple and probably won't change too much. 
 
+![img](code.png)
+
 ### Current TODOs
 - Convert to monorepo to allow supporting multiple compilers without dep issues. 
 - Create compiler for avro
