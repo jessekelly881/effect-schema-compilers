@@ -1,6 +1,9 @@
 # effect-schema-compilers
 Compilers for @effect/schema. Currently in **alpha**; although, the api is pretty simple and probably won't change too much. 
 
+[![Npm package monthly downloads](https://badgen.net/npm/dm/effect-schema-compilers)](https://npmjs.com/package/effect-schema-compilers)
+
+
 ![img](code.png)
 
 ### Current TODOs
