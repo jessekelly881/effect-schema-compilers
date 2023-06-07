@@ -1,9 +1,9 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
-import { Constraints } from "./common"
+import { Constraints, createHookId } from "./common"
 
 
-export const AvroHookId = "@effect/schema/annotation/AvroHookId" as const
+export const AvroHookId = createHookId("AvroHookId")
 
 interface Avro {
     (): object
