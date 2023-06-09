@@ -1,7 +1,9 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
+import * as O from "@effect/data/Option";
 import { Constraints, combineConstraints, createHookId, getConstraints } from "./common"
 import type { Schema } from "avsc"
+import { pipe } from "@effect/data/Function";
 
 
 export const AvroHookId = createHookId("AvroHookId")
@@ -33,6 +35,8 @@ const go = (ast: AST.AST, c?: Constraints): Avro => {
         return annotations.value
     }
 
+    const name = pipe(ast, AST.getAnnotation<string>(AST.IdentifierAnnotationId), O.getOrUndefined)
+
     switch (ast._tag) {
         case "NeverKeyword": throw new Error("cannot convert `never` to AvroSchema")
 
@@ -46,8 +50,24 @@ const go = (ast: AST.AST, c?: Constraints): Avro => {
         }
 
         case "BooleanKeyword": return () => ({ "type": "boolean" })
-        case "Enums": return () => ({ "type": "enum", "symbols": ast.enums.map(e => e[0]), "name": "" })
-        case "Literal": return () => ({ "type": "enum", "symbols": [ast.literal.toString()], "name": "" })
+        case "Enums": return () => ({ "type": "enum", "symbols": ast.enums.map(e => e[0]), "name": name ?? "" })
+        case "Literal": return () => ({ "type": "enum", "symbols": [ast.literal.toString()], "name": name ?? "" })
+
+        case "TypeLiteral": {
+            const propertySignaturesTypes = ast.propertySignatures.map((f) => go(f.type))
+
+            return () => {
+                return {
+                    name: name ?? "",
+                    type: "record",
+                    fields: propertySignaturesTypes.map((av, i) => {
+                        const ps = ast.propertySignatures[i]
+                        const inner = av()
+                        return { name: ps.name.toString(), type: inner.type }
+                    })
+                }
+            }
+        }
 
         case "Refinement": return go(ast.from, combineConstraints(c, getConstraints(ast)))
     }

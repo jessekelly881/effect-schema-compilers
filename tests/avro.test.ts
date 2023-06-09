@@ -35,14 +35,21 @@ describe("Avro", () => {
     })
 
     it("enum/ ", () => {
-        const schema = S.enums(Fruits)
+        const schema = pipe(S.enums(Fruits), S.identifier("Fruits"))
         const avroSchema = _.to(schema)();
-        expect(avroSchema).toEqual({ name: "", type: "enum", symbols: ["Apple", "Banana"] } satisfies schema.AvroSchema)
+        expect(avroSchema).toEqual({ name: "Fruits", type: "enum", symbols: ["Apple", "Banana"] } satisfies schema.AvroSchema)
     })
 
     it("literal/ ", () => {
         const val = _.to(S.literal("a"))();
 
         expect(val).toEqual({ name: "", type: "enum", symbols: ["a"] } satisfies schema.AvroSchema)
+    })
+
+    it("struct/ ", () => {
+        const schema = S.struct({ str: S.string, num: S.number })
+        const val = _.to(schema)();
+
+        expect(val).toEqual({ name: "", type: "record", fields: [{ name: "str", type: "string" }, { name: "num", type: "float" }] } satisfies schema.AvroSchema)
     })
 })
