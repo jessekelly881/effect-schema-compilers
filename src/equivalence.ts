@@ -1,6 +1,6 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
-import * as Eq from "@effect/data/typeclass/Equivalence";
+import * as Eq from "@effect/data/Equivalence";
 import { pipe } from "@effect/data/Function"
 import * as O from "@effect/data/Option"
 import * as RA from "@effect/data/ReadonlyArray"

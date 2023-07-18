@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import * as S from "@effect/schema/Schema"
 import { pipe } from "@effect/data/Function"
 import * as _ from "../src/semigroup"
-import * as Semi from "@effect/data/typeclass/Semigroup"
+import * as Semi from "@effect/typeclass/Semigroup"
 import * as n from "@effect/data/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";

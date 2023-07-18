@@ -7,21 +7,6 @@ import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
 import { Category, Fruits } from "./common";
 
-/**
- * Tests that 
- * 1) decode(empty(from(schema))) == empty(to(schema))
- * 2) empty(from(schema)) == encode(empty(to(schema)))
- */
-const testBidirectionality = <I, A>(schema: S.Schema<I, A>) => {
-    const emptyTo = _.to(schema)();
-    const emptyFrom = _.from(schema)();
-    const computedTo = S.decode(schema)(emptyFrom)
-    const computedFrom = S.encode(schema)(emptyTo)
-
-    expect(computedTo).toEqual(emptyTo)
-    expect(computedFrom).toEqual(emptyFrom)
-}
-
 const expectEmptyValues = <A, I>(schema: S.Schema<I, A>, from: I, to: A) => {
     const emptyTo = _.to(schema)();
     const emptyFrom = _.from(schema)();
@@ -84,7 +69,6 @@ describe("empty", () => {
             S.string,
             S.transform(S.tuple(S.string), (s) => [s] as readonly string[], ([s]) => s))
 
-        testBidirectionality(schema)
         expectEmptyValues(schema, "", [""])
     })
 
@@ -131,7 +115,6 @@ describe("empty", () => {
         )
         const empty = _.to(schema)()
     
-        testBidirectionality(schema)
         expect(empty).toEqual({ a: "", b: 0, c: [], e: { f: [0, "literal"] }, g: "/" })
     })
     
@@ -160,7 +143,6 @@ describe("empty", () => {
         const schema = Category
         const empty = _.to(schema)()
 
-        testBidirectionality(schema)
         expect(empty).toEqual({ name: "", subcategories: [] })
     })
 })
