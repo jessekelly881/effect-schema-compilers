@@ -47,6 +47,7 @@ The semigroup for a Schema can be set using the semigroup() fn. For example,
 
 ```ts
 import * as S from "@effect/schema/Schema";
+import * as Semi from "@effect/typeclass/Semigroup"'
 import * as _ from "effect-schema-compilers/dist/semigroup";
 import { pipe } from "@effect/data/Function";
 
