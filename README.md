@@ -1,5 +1,5 @@
 # effect-schema-compilers
-Compilers for @effect/schema. Currently in **alpha**; although, the api is pretty simple and probably won't change too much. For a collection of types with preconfigured compilers see [effect-types](https://github.com/jessekelly881/effect-types)
+Compilers for @effect/schema. Currently in **alpha**; although, the api is pretty simple and probably won't change too much. For a collection of types preconfigured to work with these types see [effect-types](https://github.com/jessekelly881/effect-types)
 
 [![Npm package monthly downloads](https://badgen.net/npm/dm/effect-schema-compilers)](https://npmjs.com/package/effect-schema-compilers)
 
