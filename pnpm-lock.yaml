@@ -6,6 +6,7 @@ specifiers:
   '@effect/schema': ^0.28.0
   '@effect/typeclass': ^0.1.0
   '@faker-js/faker': ^8.0.2
+  avsc: ^5.7.7
   build-utils: ^2.0.12
   fast-check: ^3.11.0
   husky: ^8.0.3
@@ -23,6 +24,7 @@ dependencies:
 devDependencies:
   '@changesets/cli': 2.26.0
   '@faker-js/faker': 8.0.2
+  avsc: 5.7.7
   build-utils: 2.0.12
   husky: 8.0.3
   tsup: 6.6.3_typescript@5.0.4
@@ -751,6 +753,11 @@ packages:
   /available-typed-arrays/1.0.5:
     resolution: {integrity: sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==}
     engines: {node: '>= 0.4'}
+    dev: true
+
+  /avsc/5.7.7:
+    resolution: {integrity: sha512-9cYNccliXZDByFsFliVwk5GvTq058Fj513CiR4E60ndDwmuXzTJEp/Bp8FyuRmGyYupLjHLs+JA9/CBoVS4/NQ==}
+    engines: {node: '>=0.11'}
     dev: true
 
   /aws-sign2/0.7.0:

@@ -32,6 +32,7 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
     "@faker-js/faker": "^8.0.2",
+    "avsc": "^5.7.7",
     "build-utils": "^2.0.12",
     "husky": "^8.0.3",
     "tsup": "^6.6.3",
