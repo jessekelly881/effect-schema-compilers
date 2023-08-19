@@ -126,18 +126,18 @@ const expectedSchema = {
     "type": "object",
     "additionalProperties": false,
     "properties": {
-    "age": {
-        "maximum": 120,
-        "minimum": 18,
-        "type": "integer",
-    },
-    "name": {
-        "type": "string",
-    },
+        "age": {
+            "maximum": 120,
+            "minimum": 18,
+            "type": "integer",
+        },
+        "name": {
+            "type": "string",
+        },
     },
     "required": [
-    "name",
-    "age",
+        "name",
+        "age",
     ],
 }
 
