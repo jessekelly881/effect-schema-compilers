@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.17
+
+### Patch Changes
+
+- 062ac5d: updated @effect deps
+
 ## 0.0.16
 
 ### Patch Changes
