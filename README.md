@@ -107,3 +107,40 @@ const Person = S.struct({
 
 const fakeData = _.to(Person)(F.faker) // { name: "Seth Gottlieb", age: 36, sex: "male" }
 ```
+
+## JSON Schema
+
+Generates a JSON Schema (currently v7) from a Schema. Borrowed from @effect/schema/test.
+
+```ts
+import * as S from "@effect/schema/Schema"
+import { pipe } from "@effect/data/Function";
+import * as _ from "effect-schema-compilers/dist/jsonSchema";
+
+const Person = S.struct({
+    name: S.string,
+    age: S.number.pipe(S.int(), S.greaterThanOrEqualTo(18), S.lessThanOrEqualTo(120)),
+});
+
+const expectedSchema = {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+    "age": {
+        "maximum": 120,
+        "minimum": 18,
+        "type": "integer",
+    },
+    "name": {
+        "type": "string",
+    },
+    },
+    "required": [
+    "name",
+    "age",
+    ],
+}
+
+const jsonSchema = _.to(Person)
+expect(jsonSchema).toEqual(expectedSchema)
+```
