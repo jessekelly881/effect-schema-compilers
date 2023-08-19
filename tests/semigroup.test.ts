@@ -3,6 +3,9 @@ import * as S from "@effect/schema/Schema"
 import { pipe } from "@effect/data/Function"
 import * as _ from "../src/semigroup"
 import * as Semi from "@effect/typeclass/Semigroup"
+import * as Boolean from "@effect/typeclass/data/Boolean";
+import * as Number from "@effect/typeclass/data/Number";
+import * as String from "@effect/typeclass/data/String";
 import * as n from "@effect/data/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
@@ -27,11 +30,9 @@ const generatesValidSemigroup = <I, A>(schema: S.Schema<I, A>) => {
 describe("semigroup", () => {
 
     it("ast", () => {
-        const s = Semi.numberSum
-
-        const ast = pipe(S.NumberFromString, _.semigroup(s)).ast.annotations
+        const ast = pipe(S.NumberFromString, _.semigroup(Number.SemigroupSum)).ast.annotations
         expect(ast).toEqual({
-            [_.SemigroupHookId]: s
+            [_.SemigroupHookId]: Number.SemigroupSum
         })
     })
 
@@ -74,7 +75,7 @@ describe("semigroup", () => {
     })
 
     it("string/ concat", () => {
-        const schema = pipe(S.string, _.semigroup(Semi.string))
+        const schema = pipe(S.string, _.semigroup(String.Semigroup))
         const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
@@ -139,7 +140,7 @@ describe("semigroup", () => {
     })
 
     it("boolean/ any", () => {
-        const schema = pipe(S.boolean, _.semigroup(Semi.booleanSome))
+        const schema = pipe(S.boolean, _.semigroup(Boolean.SemigroupSome))
         const { combine } = _.to(schema)()
 
         generatesValidSemigroup(schema)
@@ -149,7 +150,7 @@ describe("semigroup", () => {
     it("struct/ [min, concat]", () => {
         const schema = S.struct({ 
             a: pipe(S.number, S.nonNaN(), _.semigroup(Semi.min(n.Order))), 
-            b: pipe(S.string, _.semigroup(Semi.string)),
+            b: pipe(S.string, _.semigroup(String.Semigroup)),
             c: S.boolean
         });
 

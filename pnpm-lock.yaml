@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@changesets/cli': ^2.26.0
   '@effect/data': ^0.17.5
+  '@effect/io': ^0.38.2
   '@effect/schema': ^0.33.1
   '@effect/typeclass': ^0.3.0
   '@faker-js/faker': ^8.0.2
@@ -17,7 +18,8 @@ specifiers:
 
 dependencies:
   '@effect/data': 0.17.5
-  '@effect/schema': 0.33.1_@effect+data@0.17.5
+  '@effect/io': 0.38.2_@effect+data@0.17.5
+  '@effect/schema': 0.33.1_sws5luwqkicizfmcvy7d4tjyca
   '@effect/typeclass': 0.3.0
   fast-check: 3.11.0
   typescript: 5.0.4
@@ -255,13 +257,22 @@ packages:
     resolution: {integrity: sha512-D6hYM+IReoM6YR8okIS5dygcUDdXR+De3O2b8SHwenE0PRQrGnZ9O6kJFeqkkX6pIZwEWBnb1l9SKOrw7auI4A==}
     dev: false
 
-  /@effect/schema/0.33.1_@effect+data@0.17.5:
+  /@effect/io/0.38.2_@effect+data@0.17.5:
+    resolution: {integrity: sha512-rnAXFo9BDLbY7DgQE1e8uP/sEniyVCsB7gNs+yXPu0XK9s4kaGinH6XgwYRDBuu7Fu1tQ1yd7JoAdEb7yutNRg==}
+    peerDependencies:
+      '@effect/data': ^0.17.1
+    dependencies:
+      '@effect/data': 0.17.5
+    dev: false
+
+  /@effect/schema/0.33.1_sws5luwqkicizfmcvy7d4tjyca:
     resolution: {integrity: sha512-h+fQInui4q3we8fegAygL0Cs5B2DD/+oC3JWthOh8eLcbKkbYM9smCD/PsHuyQ+BaeWiSP5JdvREGlP4Sg+Ysw==}
     peerDependencies:
       '@effect/data': ^0.17.1
       '@effect/io': ^0.38.0
     dependencies:
       '@effect/data': 0.17.5
+      '@effect/io': 0.38.2_@effect+data@0.17.5
       fast-check: 3.12.0
     dev: false
 
