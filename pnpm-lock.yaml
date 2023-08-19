@@ -2,9 +2,9 @@ lockfileVersion: 5.4
 
 specifiers:
   '@changesets/cli': ^2.26.0
-  '@effect/data': ^0.15.1
-  '@effect/schema': ^0.28.0
-  '@effect/typeclass': ^0.1.0
+  '@effect/data': ^0.17.5
+  '@effect/schema': ^0.33.1
+  '@effect/typeclass': ^0.3.0
   '@faker-js/faker': ^8.0.2
   ajv: ^8.12.0
   build-utils: ^2.0.12
@@ -16,9 +16,9 @@ specifiers:
   vitest: ^0.29.3
 
 dependencies:
-  '@effect/data': 0.15.1
-  '@effect/schema': 0.28.0
-  '@effect/typeclass': 0.1.0
+  '@effect/data': 0.17.5
+  '@effect/schema': 0.33.1_@effect+data@0.17.5
+  '@effect/typeclass': 0.3.0
   fast-check: 3.11.0
   typescript: 5.0.4
 
@@ -251,32 +251,24 @@ packages:
       prettier: 2.8.4
     dev: true
 
-  /@effect/data/0.13.6:
-    resolution: {integrity: sha512-nWNGS7SQKUD7qRamHE9iamrdV9JUuS5o8X7hLrk6jjLOQ47tDh6da190o7h6cNck74HZBNXeb78LaRGkK9Sc5g==}
+  /@effect/data/0.17.5:
+    resolution: {integrity: sha512-D6hYM+IReoM6YR8okIS5dygcUDdXR+De3O2b8SHwenE0PRQrGnZ9O6kJFeqkkX6pIZwEWBnb1l9SKOrw7auI4A==}
     dev: false
 
-  /@effect/data/0.15.1:
-    resolution: {integrity: sha512-dYe3GL2Lq8M56Q+QvEOPRtpRovhy1QprlBRGIjaCRPZ8DbwRFQZSdPPOL+ZX6e7y3DPF0RW+DFLHYRMA6qGOCw==}
-    dev: false
-
-  /@effect/io/0.34.0:
-    resolution: {integrity: sha512-v3elB62xFAoHEXxgJIRwEChw1kLB6139TNO/wOY7nLmHrGyVbonhzfBGlXF6bYleCgSeeM4bfEyoVydm9qWNZQ==}
+  /@effect/schema/0.33.1_@effect+data@0.17.5:
+    resolution: {integrity: sha512-h+fQInui4q3we8fegAygL0Cs5B2DD/+oC3JWthOh8eLcbKkbYM9smCD/PsHuyQ+BaeWiSP5JdvREGlP4Sg+Ysw==}
+    peerDependencies:
+      '@effect/data': ^0.17.1
+      '@effect/io': ^0.38.0
     dependencies:
-      '@effect/data': 0.15.1
+      '@effect/data': 0.17.5
+      fast-check: 3.12.0
     dev: false
 
-  /@effect/schema/0.28.0:
-    resolution: {integrity: sha512-HIMw//zc0aeHF8PLxtMm0wHo72X5njg8v+0nRGr2gM1nKfFWApuiGI/i/6PZGMg1hD/721vVjCUs+rI+eh8kiw==}
+  /@effect/typeclass/0.3.0:
+    resolution: {integrity: sha512-eg91Dfpx8FqXIoq4DDVuY/wl+92K89HEgtwVcScRu7QAsp64QzkFpmNgHKPyA3tzT7ku+cV16NdoDId58sJgiQ==}
     dependencies:
-      '@effect/data': 0.15.1
-      '@effect/io': 0.34.0
-      fast-check: 3.11.0
-    dev: false
-
-  /@effect/typeclass/0.1.0:
-    resolution: {integrity: sha512-SG3rimrX7lpMut0APNartgCH3WTEK5DLs6M9SzrZQc7GDY3V+rR/W8oR11F0vFCzr7YfW1Iaqz5AnQII6l0UJQ==}
-    dependencies:
-      '@effect/data': 0.13.6
+      '@effect/data': 0.17.5
     dev: false
 
   /@esbuild/android-arm/0.17.11:
@@ -1698,6 +1690,13 @@ packages:
 
   /fast-check/3.11.0:
     resolution: {integrity: sha512-H2tctb7AGfFQfz+DEr3UWhJ3s47LXsGp5g3jeJr5tHjnf4xUvpArIqiwcDmL2EXiv+auLHIpF5MqaIpIKvpxiA==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      pure-rand: 6.0.2
+    dev: false
+
+  /fast-check/3.12.0:
+    resolution: {integrity: sha512-SqahE9mlL3+lhjJ39joMLwcj6F+24hfZdf/tchlNO8sHcTdrUUdA5P/ZbSFZM9Xpzs36XaneGwE0FWepm/zyOA==}
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.0.2
