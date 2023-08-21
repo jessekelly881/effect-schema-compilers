@@ -21,17 +21,21 @@ const fnCall = <A>(fn: Doc.Doc<A>, args: Doc.Doc<A>[]): Doc.Doc<A> =>
 
 interface Config {
     scope: string; // e.g. "S" -> S.number
+    quote: "single" | "double";
 }
 
-const defaultConfig: Config = { scope: "S" }
+const defaultConfig: Config = { scope: "S", quote: "double" }
 
 const getIdentifier = AST.getAnnotation<AST.IdentifierAnnotation>(
     AST.IdentifierAnnotationId
 )
 
-const to = <I, A>(schema: S.Schema<I, A>, config: Config = defaultConfig): Doc.Doc<A> => go(AST.to(schema.ast), config)
+const to = <I, A>(schema: S.Schema<I, A>, config: Config = defaultConfig): Doc.Doc<A> => 
+    go(AST.to(schema.ast), config)
 
 const go = (ast: AST.AST, config: Config = defaultConfig) => {
+    const quote = config.quote === "double" ? Doc.doubleQuoted : Doc.singleQuoted
+
     const annotations = getIdentifier(ast)
     if(annotations._tag === "Some") {
         return scope(config.scope, Doc.text(annotations.value))
@@ -43,7 +47,7 @@ const go = (ast: AST.AST, config: Config = defaultConfig) => {
         case "StringKeyword": return scope(config.scope, Doc.text("string"))
         case "BooleanKeyword": return scope(config.scope, Doc.text("boolean"))
         case "SymbolKeyword": return scope(config.scope, Doc.text("symbol"))
-        case "Literal": return fnCall(scope(config.scope, Doc.text("literal")), [Doc.doubleQuoted(Doc.text(ast.literal?.toString() || ""))])
+        case "Literal": return fnCall(scope(config.scope, Doc.text("literal")), [quote(Doc.text(ast.literal?.toString() || ""))])
 
         case "NeverKeyword": return scope(config.scope, Doc.text("never"))
         case "AnyKeyword": return scope(config.scope, Doc.text("any"))
