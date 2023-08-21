@@ -4,6 +4,7 @@ specifiers:
   '@changesets/cli': ^2.26.0
   '@effect/data': ^0.17.5
   '@effect/io': ^0.38.2
+  '@effect/printer': ^0.13.0
   '@effect/schema': ^0.33.1
   '@effect/typeclass': ^0.3.0
   '@faker-js/faker': ^8.0.2
@@ -19,6 +20,7 @@ specifiers:
 dependencies:
   '@effect/data': 0.17.5
   '@effect/io': 0.38.2_@effect+data@0.17.5
+  '@effect/printer': 0.13.0_4wtt7s2pkt2dtcomxajtefle34
   '@effect/schema': 0.33.1_sws5luwqkicizfmcvy7d4tjyca
   '@effect/typeclass': 0.3.0
   fast-check: 3.11.0
@@ -263,6 +265,18 @@ packages:
       '@effect/data': ^0.17.1
     dependencies:
       '@effect/data': 0.17.5
+    dev: false
+
+  /@effect/printer/0.13.0_4wtt7s2pkt2dtcomxajtefle34:
+    resolution: {integrity: sha512-vqKilbg36AEHZJNj9fiV6qUALojR2kVePKbuJJAkaGQao9Duc6rL3QSbaGEaEzar6v68j6TGTOndg/inI2bQFA==}
+    peerDependencies:
+      '@effect/data': ~0.17.1
+      '@effect/io': ~0.38.0
+      '@effect/typeclass': ~0.3.0
+    dependencies:
+      '@effect/data': 0.17.5
+      '@effect/io': 0.38.2_@effect+data@0.17.5
+      '@effect/typeclass': 0.3.0
     dev: false
 
   /@effect/schema/0.33.1_sws5luwqkicizfmcvy7d4tjyca:
