@@ -1,5 +1,11 @@
 # @kellyjesse881/empty
 
+## 0.0.18
+
+### Patch Changes
+
+- 90212cd: corrected compiler type signatures
+
 ## 0.0.17
 
 ### Patch Changes
