@@ -11,7 +11,7 @@ interface Empty<A> {
     (): A
 }
 
-export const empty = <I, A, const E extends A = A>(empty: () => E): (self: S.Schema<I, A>) => S.Schema<I, A> => 
+export const empty = <A, const E extends A = A>(empty: () => E): <I>(self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [EmptyHookId]: empty })
 
 const getAnnotation = AST.getAnnotation<() => unknown>(

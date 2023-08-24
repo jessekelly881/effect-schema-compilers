@@ -7,7 +7,7 @@ import * as O from "@effect/data/Option"
 
 export const SemigroupHookId = createHookId("SemigroupHookId")
 
-export const semigroup = <I, A>(semigroup: Semi.Semigroup<A>): (self: S.Schema<I, A>) => S.Schema<I, A> => 
+export const semigroup = <A>(semigroup: Semi.Semigroup<A>): <I>(self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [SemigroupHookId]: semigroup })
 
 const getAnnotation = AST.getAnnotation<Semi.Semigroup<unknown>>(

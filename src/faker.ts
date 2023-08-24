@@ -13,7 +13,7 @@ interface Faker<A> {
     (faker: F.Faker): A
 }
 
-export const faker = <I, A>(faker: Faker<A>): (self: S.Schema<I, A>) => S.Schema<I, A> => 
+export const faker = <A>(faker: Faker<A>): <I>(self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [FakerHookId]: faker })
 
 const getAnnotation = AST.getAnnotation<Faker<unknown>>(

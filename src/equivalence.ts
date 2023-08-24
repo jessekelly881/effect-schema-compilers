@@ -10,7 +10,7 @@ import * as Equal from "@effect/data/Equal";
 
 export const EquivalenceHookId = createHookId("EquivalenceHookId")
 
-export const equivalence = <I, A>(eq: Eq.Equivalence<A>): (self: S.Schema<I, A>) => S.Schema<I, A> => 
+export const equivalence = <A>(eq: Eq.Equivalence<A>): <I>(self: S.Schema<I, A>) => S.Schema<I, A> => 
     S.annotations({ [EquivalenceHookId]: eq })
 
 const getAnnotation = AST.getAnnotation<Eq.Equivalence<unknown>>(
