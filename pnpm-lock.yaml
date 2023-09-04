@@ -22,7 +22,7 @@ dependencies:
     version: 0.3.0
   fast-check:
     specifier: ^3.11.0
-    version: 3.11.0
+    version: 3.12.1
   typescript:
     specifier: ^5.0.4
     version: 5.0.4
@@ -304,7 +304,7 @@ packages:
     dependencies:
       '@effect/data': 0.17.5
       '@effect/io': 0.38.2(@effect/data@0.17.5)
-      fast-check: 3.12.0
+      fast-check: 3.12.1
     dev: false
 
   /@effect/typeclass@0.3.0:
@@ -1959,15 +1959,8 @@ packages:
     engines: {'0': node >=0.6.0}
     dev: true
 
-  /fast-check@3.11.0:
-    resolution: {integrity: sha512-H2tctb7AGfFQfz+DEr3UWhJ3s47LXsGp5g3jeJr5tHjnf4xUvpArIqiwcDmL2EXiv+auLHIpF5MqaIpIKvpxiA==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      pure-rand: 6.0.2
-    dev: false
-
-  /fast-check@3.12.0:
-    resolution: {integrity: sha512-SqahE9mlL3+lhjJ39joMLwcj6F+24hfZdf/tchlNO8sHcTdrUUdA5P/ZbSFZM9Xpzs36XaneGwE0FWepm/zyOA==}
+  /fast-check@3.12.1:
+    resolution: {integrity: sha512-aRN6WrO+q3TZV8CjXnpebx9bTHrpYIOVi6v3ttxciZiWqS739yy8b1oVx+qNEyV1b8RdVjlp/+miTY6yAp90HA==}
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.0.2
