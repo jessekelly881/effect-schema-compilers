@@ -16,7 +16,7 @@ dependencies:
     version: 0.13.0(@effect/data@0.17.5)(@effect/io@0.38.2)(@effect/typeclass@0.3.0)
   '@effect/schema':
     specifier: ^0.33.1
-    version: 0.33.1(@effect/data@0.17.5)(@effect/io@0.38.2)
+    version: 0.33.2(@effect/data@0.17.5)(@effect/io@0.38.2)
   '@effect/typeclass':
     specifier: ^0.3.0
     version: 0.3.0
@@ -296,8 +296,8 @@ packages:
       '@effect/typeclass': 0.3.0
     dev: false
 
-  /@effect/schema@0.33.1(@effect/data@0.17.5)(@effect/io@0.38.2):
-    resolution: {integrity: sha512-h+fQInui4q3we8fegAygL0Cs5B2DD/+oC3JWthOh8eLcbKkbYM9smCD/PsHuyQ+BaeWiSP5JdvREGlP4Sg+Ysw==}
+  /@effect/schema@0.33.2(@effect/data@0.17.5)(@effect/io@0.38.2):
+    resolution: {integrity: sha512-GfV4kXAs4tkx09bGD6J4RDqVN+xea4UP0I05r1wloox6j0eYgXYaSKAXAZ7qBKVywkba3cDUDZhc9nplAD8TAA==}
     peerDependencies:
       '@effect/data': ^0.17.1
       '@effect/io': ^0.38.0
