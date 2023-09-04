@@ -37,7 +37,7 @@
     "eslint": "^8.47.0",
     "husky": "^8.0.3",
     "tsup": "^6.6.3",
-    "vitest": "^0.29.3"
+    "vitest": "^0.34.3"
   },
   "dependencies": {
     "@effect/data": "^0.17.5",
