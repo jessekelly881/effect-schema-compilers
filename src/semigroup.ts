@@ -2,8 +2,8 @@ import * as S from "@effect/schema/Schema"
 import * as Semi from "@effect/typeclass/Semigroup"
 import * as AST from "@effect/schema/AST"
 import { createHookId, memoizeThunk } from "./common"
-import * as RA from "@effect/data/ReadonlyArray"
-import * as O from "@effect/data/Option"
+import * as RA from "effect/ReadonlyArray"
+import * as O from "effect/Option"
 
 export const SemigroupHookId = createHookId("SemigroupHookId")
 

@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import * as S from "@effect/schema/Schema"
-import { pipe } from "@effect/data/Function"
+import { pipe } from "effect/Function"
 import * as _ from "../src/semigroup"
 import * as Semi from "@effect/typeclass/Semigroup"
 import * as Boolean from "@effect/typeclass/data/Boolean";
 import * as Number from "@effect/typeclass/data/Number";
 import * as String from "@effect/typeclass/data/String";
-import * as n from "@effect/data/Number"
+import * as n from "effect/Number"
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
 import { to } from "../src/equivalence"

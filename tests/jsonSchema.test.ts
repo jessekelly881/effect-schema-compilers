@@ -3,7 +3,7 @@ import * as A from "@effect/schema/Arbitrary";
 import * as S from "@effect/schema/Schema";
 import * as fc from "fast-check";
 import * as _ from "../src/jsonSchema";
-import { isRecord } from "@effect/data/Predicate";
+import { isRecord } from "effect/Predicate";
 import Ajv from "ajv";
 
 const isJsonArray = (u: unknown): u is _.JsonArray => Array.isArray(u) && u.every(isJson)

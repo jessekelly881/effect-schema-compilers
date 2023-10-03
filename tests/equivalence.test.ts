@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import * as S from "@effect/schema/Schema"
-import { pipe } from "@effect/data/Function"
+import { pipe } from "effect/Function"
 import * as _ from "../src/equivalence"
-import * as Eq from "@effect/data/Equivalence";
+import * as Eq from "effect/Equivalence";
 import * as fc from 'fast-check'
 import * as A from "@effect/schema/Arbitrary";
 import { Category, Fruits } from "./common";

@@ -1,9 +1,9 @@
-import * as O from "@effect/data/Option"
-import * as RA from "@effect/data/ReadonlyArray"
+import * as O from "effect/Option"
+import * as RA from "effect/ReadonlyArray"
 import * as AST from "@effect/schema/AST"
 import type { Schema } from "@effect/schema/Schema"
 import * as S from "@effect/schema/Schema"
-import { pipe } from "@effect/data/Function"
+import { pipe } from "effect/Function"
 
 export type JsonSchema7AnyType = {}
 

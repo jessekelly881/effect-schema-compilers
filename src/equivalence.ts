@@ -1,11 +1,9 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
-import * as Eq from "@effect/data/Equivalence";
-import { pipe } from "@effect/data/Function"
-import * as O from "@effect/data/Option"
-import * as RA from "@effect/data/ReadonlyArray"
+import * as Eq from "effect/Equivalence";
+import * as O from "effect/Option"
+import * as RA from "effect/ReadonlyArray"
 import { createHookId, memoizeThunk } from "./common"
-import * as Equal from "@effect/data/Equal";
 
 
 export const EquivalenceHookId = createHookId("EquivalenceHookId")

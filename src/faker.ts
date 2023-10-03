@@ -1,11 +1,10 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
 import type * as F from '@faker-js/faker';
-import * as O from "@effect/data/Option"
-import { pipe } from "@effect/data/Function";
-import * as RA from "@effect/data/ReadonlyArray"
+import * as O from "effect/Option"
+import * as RA from "effect/ReadonlyArray"
 import { Constraints, combineConstraints, createHookId, getConstraints, memoizeThunk } from "./common"
-import { isBigint, isNumber } from "@effect/data/Predicate";
+import { isBigint, isNumber } from "effect/Predicate";
 
 export const FakerHookId = createHookId("FakerHookId")
 
@@ -92,7 +91,7 @@ const go = (ast: AST.AST, depthLimit = 10, constraints?: Constraints): Faker<any
                 const max = c.constraints.maxLength
                 const pattern = c.constraints.pattern;
 
-                return c.constraints.pattern ? f.helpers.fromRegExp(pattern) : f.string.sample({ min, max })
+                return pattern ? f.helpers.fromRegExp(pattern) : f.string.sample({ min, max })
             }
 
             return f.string.sample()

@@ -1,7 +1,7 @@
 import * as S from "@effect/schema/Schema"
 import * as AST from "@effect/schema/AST"
-import * as RA from "@effect/data/ReadonlyArray"
-import * as O from "@effect/data/Option"
+import * as RA from "effect/ReadonlyArray"
+import * as O from "effect/Option"
 import { Constraints, combineConstraints, getConstraints, createHookId } from "./common"
 
 

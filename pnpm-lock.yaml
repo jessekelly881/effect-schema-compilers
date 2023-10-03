@@ -1,28 +1,21 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
-  '@effect/data':
-    specifier: ^0.17.5
-    version: 0.17.5
-  '@effect/io':
-    specifier: ^0.38.2
-    version: 0.38.2(@effect/data@0.17.5)
   '@effect/printer':
     specifier: ^0.13.0
-    version: 0.13.0(@effect/data@0.17.5)(@effect/io@0.38.2)(@effect/typeclass@0.3.0)
+    version: 0.13.0(@effect/typeclass@0.3.0)
   '@effect/schema':
-    specifier: ^0.33.1
-    version: 0.33.1(@effect/data@0.17.5)(@effect/io@0.38.2)
+    specifier: ^0.39.2
+    version: 0.39.2(effect@2.0.0-next.42)
   '@effect/typeclass':
     specifier: ^0.3.0
     version: 0.3.0
+  effect:
+    specifier: 2.0.0-next.42
+    version: 2.0.0-next.42
   fast-check:
-    specifier: ^3.11.0
-    version: 3.11.0
+    specifier: ^3.13.1
+    version: 3.13.1
   typescript:
     specifier: ^5.0.4
     version: 5.0.4
@@ -276,35 +269,23 @@ packages:
     resolution: {integrity: sha512-D6hYM+IReoM6YR8okIS5dygcUDdXR+De3O2b8SHwenE0PRQrGnZ9O6kJFeqkkX6pIZwEWBnb1l9SKOrw7auI4A==}
     dev: false
 
-  /@effect/io@0.38.2(@effect/data@0.17.5):
-    resolution: {integrity: sha512-rnAXFo9BDLbY7DgQE1e8uP/sEniyVCsB7gNs+yXPu0XK9s4kaGinH6XgwYRDBuu7Fu1tQ1yd7JoAdEb7yutNRg==}
-    peerDependencies:
-      '@effect/data': ^0.17.1
-    dependencies:
-      '@effect/data': 0.17.5
-    dev: false
-
-  /@effect/printer@0.13.0(@effect/data@0.17.5)(@effect/io@0.38.2)(@effect/typeclass@0.3.0):
+  /@effect/printer@0.13.0(@effect/typeclass@0.3.0):
     resolution: {integrity: sha512-vqKilbg36AEHZJNj9fiV6qUALojR2kVePKbuJJAkaGQao9Duc6rL3QSbaGEaEzar6v68j6TGTOndg/inI2bQFA==}
     peerDependencies:
       '@effect/data': ~0.17.1
       '@effect/io': ~0.38.0
       '@effect/typeclass': ~0.3.0
     dependencies:
-      '@effect/data': 0.17.5
-      '@effect/io': 0.38.2(@effect/data@0.17.5)
       '@effect/typeclass': 0.3.0
     dev: false
 
-  /@effect/schema@0.33.1(@effect/data@0.17.5)(@effect/io@0.38.2):
-    resolution: {integrity: sha512-h+fQInui4q3we8fegAygL0Cs5B2DD/+oC3JWthOh8eLcbKkbYM9smCD/PsHuyQ+BaeWiSP5JdvREGlP4Sg+Ysw==}
+  /@effect/schema@0.39.2(effect@2.0.0-next.42):
+    resolution: {integrity: sha512-UolykyRtrg+JHflZBfHK2p+w8IgP8u6kSkTq9VIggure12/2CFvlib9vphw4fJCN8cRd3gZo4LevU4FfS+ZLxw==}
     peerDependencies:
-      '@effect/data': ^0.17.1
-      '@effect/io': ^0.38.0
+      effect: ^2.0.0-next.39
     dependencies:
-      '@effect/data': 0.17.5
-      '@effect/io': 0.38.2(@effect/data@0.17.5)
-      fast-check: 3.12.0
+      effect: 2.0.0-next.42
+      fast-check: 3.13.1
     dev: false
 
   /@effect/typeclass@0.3.0:
@@ -1618,6 +1599,10 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
+  /effect@2.0.0-next.42:
+    resolution: {integrity: sha512-ydeSVYDmX70CPyUmZ12SNEQZrzynBmzmxm8An4kl3Bpw8GPbZhkpjb0z41+6vBKiuIAhko3icspLy71qIAytEA==}
+    dev: false
+
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
     dev: true
@@ -1959,15 +1944,8 @@ packages:
     engines: {'0': node >=0.6.0}
     dev: true
 
-  /fast-check@3.11.0:
-    resolution: {integrity: sha512-H2tctb7AGfFQfz+DEr3UWhJ3s47LXsGp5g3jeJr5tHjnf4xUvpArIqiwcDmL2EXiv+auLHIpF5MqaIpIKvpxiA==}
-    engines: {node: '>=8.0.0'}
-    dependencies:
-      pure-rand: 6.0.2
-    dev: false
-
-  /fast-check@3.12.0:
-    resolution: {integrity: sha512-SqahE9mlL3+lhjJ39joMLwcj6F+24hfZdf/tchlNO8sHcTdrUUdA5P/ZbSFZM9Xpzs36XaneGwE0FWepm/zyOA==}
+  /fast-check@3.13.1:
+    resolution: {integrity: sha512-Xp00tFuWd83i8rbG/4wU54qU+yINjQha7bXH2N4ARNTkyOimzHtUBJ5+htpdXk7RMaCOD/j2jxSjEt9u9ZPNeQ==}
     engines: {node: '>=8.0.0'}
     dependencies:
       pure-rand: 6.0.2
@@ -4676,3 +4654,7 @@ packages:
     dev: true
 
 publishDirectory: dist
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

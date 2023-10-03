@@ -1,8 +1,8 @@
 import * as AST from "@effect/schema/AST"
 import * as S from "@effect/schema/Schema"
-import { isNumber } from "@effect/data/Predicate"
+import { isNumber } from "effect/Predicate"
 
-export const createHookId = <I extends string>(id: I) => `effect-schema-compilers/${id}` as const
+export const createHookId = (id: string) => Symbol(`effect-schema-compilers/${id}`)
 
 /** 
  * TODO: Replace with import from "@effect/schema/internal/common" when working
@@ -87,14 +87,6 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
       });
     case S.LessThanOrEqualToTypeId:
       return new NumberConstraints({ max: jsonSchema.maximum });
-    case S.PositiveTypeId:
-      return new NumberConstraints({ exclusiveMin: 0 });
-    case S.NonNegativeTypeId:
-      return new NumberConstraints({ min: 0 });
-    case S.NegativeTypeId:
-      return new NumberConstraints({ exclusiveMax: 0 });
-    case S.NonPositiveTypeId:
-      return new NumberConstraints({ max: 0 });
     case S.IntTypeId:
       return new NumberConstraints({ isInt: true });
     case S.BetweenTypeId:
@@ -116,14 +108,6 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
       });
     case S.LessThanOrEqualToBigintTypeId:
       return new BigintConstraints({ max: jsonSchema.maximum });
-    case S.PositiveBigintTypeId:
-      return new BigintConstraints({ exclusiveMin: 0n });
-    case S.NonNegativeBigintTypeId:
-      return new BigintConstraints({ min: 0n });
-    case S.NegativeBigintTypeId:
-      return new BigintConstraints({ exclusiveMax: 0n });
-    case S.NonPositiveBigintTypeId:
-      return new BigintConstraints({ max: 0n });
     case S.BetweenBigintTypeId:
       return new BigintConstraints({
         min: jsonSchema.minimum,
@@ -131,6 +115,8 @@ export const getConstraints = (ast: AST.Refinement): Constraints | undefined => 
       });
 
 	// String
+    case S.LengthTypeId:
+      return new StringConstraints({ minLength: jsonSchema.minLength, maxLength: jsonSchema.maxLength });
     case S.MinLengthTypeId:
       return new StringConstraints({ minLength: jsonSchema.minLength });
     case S.MaxLengthTypeId:

@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest";
 import * as S from "@effect/schema/Schema"
-import { pipe } from "@effect/data/Function"
+import { pipe } from "effect/Function"
 import * as _ from "../src/empty"
-import * as Eq from "../src/equivalence"
-import * as fc from 'fast-check'
-import * as A from "@effect/schema/Arbitrary";
 import { Category, Fruits } from "./common";
 
 const expectEmptyValues = <A, I>(schema: S.Schema<I, A>, from: I, to: A) => {
@@ -21,7 +18,7 @@ describe("empty", () => {
     it("any", () => expectEmptyValues(S.any, undefined, undefined))
     it("unknown", () => expectEmptyValues(S.unknown, undefined, undefined))
     it("number", () => expectEmptyValues(S.number, 0, 0))
-    it("bigint", () => expectEmptyValues(S.bigint, 0n, 0n))
+    it("bigint", () => expectEmptyValues(S.bigint, "", 0n))
     it("string", () => expectEmptyValues(S.string, "", ""));
     it("boolean", () => expectEmptyValues(S.boolean, false, false));
     it("enum", () => expectEmptyValues(S.enums(Fruits), Fruits.Apple, Fruits.Apple))
@@ -40,8 +37,8 @@ describe("empty", () => {
     it("number/ greaterThan", () => expectEmptyValues(pipe(S.number, S.greaterThan(4)), 0, 4))
     it("number/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.number, S.greaterThanOrEqualTo(4)), 0, 4))
     it("number/ int, greaterThan", () => expectEmptyValues(pipe(S.number, S.int(), S.greaterThan(4)), 0, 5))
-    it("bigint/ greaterThan", () => expectEmptyValues(pipe(S.bigint, S.greaterThanBigint(4n)), 0n, 5n))
-    it("bigint/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.bigint, S.greaterThanOrEqualToBigint(4n)), 0n, 4n))
+    it("bigint/ greaterThan", () => expectEmptyValues(pipe(S.bigint, S.greaterThanBigint(4n)), "", 5n))
+    it("bigint/ greaterThanOrEqualTo", () => expectEmptyValues(pipe(S.bigint, S.greaterThanOrEqualToBigint(4n)), "", 4n))
     it("string/ minLength", () => expectEmptyValues(pipe(S.string, S.minLength(2)), "", "  "))
     it("array/ minItems", () => expectEmptyValues(pipe(S.array(S.string), S.minItems(2)), [], ["", ""]))
 
