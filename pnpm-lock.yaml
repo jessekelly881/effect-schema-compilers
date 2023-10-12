@@ -5,14 +5,14 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0(@effect/typeclass@0.3.0)
   '@effect/schema':
-    specifier: ^0.39.2
-    version: 0.39.2(effect@2.0.0-next.42)
+    specifier: ^0.43.1
+    version: 0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1)
   '@effect/typeclass':
     specifier: ^0.3.0
     version: 0.3.0
   effect:
-    specifier: 2.0.0-next.42
-    version: 2.0.0-next.42
+    specifier: 2.0.0-next.48
+    version: 2.0.0-next.48
   fast-check:
     specifier: ^3.13.1
     version: 3.13.1
@@ -279,12 +279,13 @@ packages:
       '@effect/typeclass': 0.3.0
     dev: false
 
-  /@effect/schema@0.39.2(effect@2.0.0-next.42):
-    resolution: {integrity: sha512-UolykyRtrg+JHflZBfHK2p+w8IgP8u6kSkTq9VIggure12/2CFvlib9vphw4fJCN8cRd3gZo4LevU4FfS+ZLxw==}
+  /@effect/schema@0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1):
+    resolution: {integrity: sha512-2IMfeLJiRqryAqNliSl3Tjr6mC98KkBPOmR9HtgAbo09L4GolpWOMKo6XsALlYLnCNmLur67FGyuOW+bDEDxUw==}
     peerDependencies:
-      effect: ^2.0.0-next.39
+      effect: 2.0.0-next.48
+      fast-check: ^3.13.1
     dependencies:
-      effect: 2.0.0-next.42
+      effect: 2.0.0-next.48
       fast-check: 3.13.1
     dev: false
 
@@ -1599,8 +1600,8 @@ packages:
       safer-buffer: 2.1.2
     dev: true
 
-  /effect@2.0.0-next.42:
-    resolution: {integrity: sha512-ydeSVYDmX70CPyUmZ12SNEQZrzynBmzmxm8An4kl3Bpw8GPbZhkpjb0z41+6vBKiuIAhko3icspLy71qIAytEA==}
+  /effect@2.0.0-next.48:
+    resolution: {integrity: sha512-vwMIl39m8fMBeXoGIdSwMi2lrg7NltyrGMK0N/liGDl7G9LXvERKOCipNcobSIGO0V7hjaXEWgL6W/KEWEww+g==}
     dev: false
 
   /emoji-regex@8.0.0:
