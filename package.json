@@ -46,5 +46,44 @@
     "effect": "2.0.0-next.48",
     "fast-check": "^3.13.1",
     "typescript": "^5.0.4"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.js",
+      "import": "./dist/index.cjs",
+      "default": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json",
+    "./Empty": {
+      "types": "./dist/empty.d.ts",
+      "module": "./dist/empty.js",
+      "import": "./dist/empty.cjs",
+      "default": "./dist/empty.cjs"
+    },
+    "./Equivalence": {
+      "types": "./dist/equivalence.d.ts",
+      "module": "./dist/equivalence.js",
+      "import": "./dist/equivalence.cjs",
+      "default": "./dist/equivalence.cjs"
+    },
+    "./JsonSchema": {
+      "types": "./dist/jsonSchema.d.ts",
+      "module": "./dist/jsonSchema.js",
+      "import": "./dist/jsonSchema.cjs",
+      "default": "./dist/jsonSchema.cjs"
+    },
+    "./Semigroup": {
+      "types": "./dist/semigroup.d.ts",
+      "module": "./dist/semigroup.js",
+      "import": "./dist/semigroup.cjs",
+      "default": "./dist/semigroup.cjs"
+    },
+    "./Faker": {
+      "types": "./dist/faker.d.ts",
+      "module": "./dist/faker.js",
+      "import": "./dist/faker.cjs",
+      "default": "./dist/faker.cjs"
+    }
   }
 }

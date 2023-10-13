@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "target":"ES2022",
+    "target": "ES2022",
     "module": "commonjs",
     "noImplicitAny": true,
     "removeComments": true,
     "moduleResolution": "node",
     "preserveConstEnums": true,
   },
-  "include": ["src/**/*", "tests/empty.test.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "include": [
+    "src/**/*",
+    "tests/empty.test.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ],
 }
