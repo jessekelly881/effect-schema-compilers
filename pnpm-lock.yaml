@@ -1,19 +1,15 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@effect/printer':
     specifier: ^0.13.0
-    version: 0.13.0(@effect/data@0.17.5)(@effect/io@0.38.2)(@effect/typeclass@0.3.0)
+    version: 0.13.0(@effect/typeclass@0.10.0)
   '@effect/schema':
     specifier: ^0.43.1
     version: 0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1)
   '@effect/typeclass':
-    specifier: ^0.3.0
-    version: 0.3.0
+    specifier: ^0.10.0
+    version: 0.10.0(effect@2.0.0-next.48)
   effect:
     specifier: 2.0.0-next.48
     version: 2.0.0-next.48
@@ -269,28 +265,14 @@ packages:
       prettier: 2.8.4
     dev: true
 
-  /@effect/data@0.17.5:
-    resolution: {integrity: sha512-D6hYM+IReoM6YR8okIS5dygcUDdXR+De3O2b8SHwenE0PRQrGnZ9O6kJFeqkkX6pIZwEWBnb1l9SKOrw7auI4A==}
-    dev: false
-
-  /@effect/io@0.38.2(@effect/data@0.17.5):
-    resolution: {integrity: sha512-rnAXFo9BDLbY7DgQE1e8uP/sEniyVCsB7gNs+yXPu0XK9s4kaGinH6XgwYRDBuu7Fu1tQ1yd7JoAdEb7yutNRg==}
-    peerDependencies:
-      '@effect/data': ^0.17.1
-    dependencies:
-      '@effect/data': 0.17.5
-    dev: false
-
-  /@effect/printer@0.13.0(@effect/data@0.17.5)(@effect/io@0.38.2)(@effect/typeclass@0.3.0):
+  /@effect/printer@0.13.0(@effect/typeclass@0.10.0):
     resolution: {integrity: sha512-vqKilbg36AEHZJNj9fiV6qUALojR2kVePKbuJJAkaGQao9Duc6rL3QSbaGEaEzar6v68j6TGTOndg/inI2bQFA==}
     peerDependencies:
       '@effect/data': ~0.17.1
       '@effect/io': ~0.38.0
       '@effect/typeclass': ~0.3.0
     dependencies:
-      '@effect/data': 0.17.5
-      '@effect/io': 0.38.2(@effect/data@0.17.5)
-      '@effect/typeclass': 0.3.0
+      '@effect/typeclass': 0.10.0(effect@2.0.0-next.48)
     dev: false
 
   /@effect/schema@0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1):
@@ -303,10 +285,12 @@ packages:
       fast-check: 3.13.1
     dev: false
 
-  /@effect/typeclass@0.3.0:
-    resolution: {integrity: sha512-eg91Dfpx8FqXIoq4DDVuY/wl+92K89HEgtwVcScRu7QAsp64QzkFpmNgHKPyA3tzT7ku+cV16NdoDId58sJgiQ==}
+  /@effect/typeclass@0.10.0(effect@2.0.0-next.48):
+    resolution: {integrity: sha512-pELnCfLZMKU8I/ax/2ciVIIuRX22NJaSriToOS/QekCW5twK2COVDJYsTGPEDdJ86nth5/W0rt0wUZf0mjwxWQ==}
+    peerDependencies:
+      effect: 2.0.0-next.48
     dependencies:
-      '@effect/data': 0.17.5
+      effect: 2.0.0-next.48
     dev: false
 
   /@esbuild/android-arm64@0.18.20:
@@ -4407,3 +4391,7 @@ packages:
     dev: true
 
 publishDirectory: dist
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
