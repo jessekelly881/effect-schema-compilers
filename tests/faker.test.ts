@@ -6,87 +6,100 @@ import { pipe } from "effect/Function";
 import { Category, Fruits } from "./common";
 
 /**
- * Tests that the generated value correctly matches the schema
+ * Test a given schema
  */
-const generatesValidValue = <I, A>(schema: S.Schema<I, A>) => {
-  const fake = _.to(schema)(F.faker);
-  const isValid = S.is(schema)(fake);
-  if (!isValid) console.log(fake);
+const schema = <I, A>(name: string, schema: S.Schema<I, A>) => {
+  it(name, () => {
+    const fake = _.to(schema)(F.faker);
+    const isValid = S.is(schema)(fake);
+    if (!isValid) console.log(fake);
 
-  expect(isValid).to.be.true;
+    expect(isValid).to.be.true;
+  });
 };
 
 describe("faker", () => {
-  it("literal", () => generatesValidValue(S.literal("a", "b")));
-  it("boolean", () => generatesValidValue(S.boolean));
-  it("number", () => generatesValidValue(S.number));
-  it("bigint", () => generatesValidValue(S.bigint));
-  it("string", () => generatesValidValue(S.string));
-  it("symbol", () => generatesValidValue(S.symbol));
-  it("union", () => generatesValidValue(S.union(S.number, S.string)));
-  it("record", () => generatesValidValue(S.record(S.string, S.number)));
-  it("enum", () => generatesValidValue(S.enums(Fruits)));
-  it("array", () => generatesValidValue(S.array(S.string)));
+  schema("literal", S.literal("a", "b"));
+  schema("boolean", S.boolean);
+  schema("number", S.number);
+  schema("bigint", S.bigint);
+  schema("string", S.string);
+  schema("symbol", S.symbol);
+  schema("union", S.union(S.number, S.string));
+  schema("record", S.record(S.string, S.number));
+  schema("enum", S.enums(Fruits));
+  schema("array", S.array(S.string));
+  schema("array/ itemsCount", pipe(S.array(S.string), S.itemsCount(10)));
+  schema("lazy", Category);
+  schema("Date", S.Date);
+  schema("DateFromSelf", S.DateFromSelf);
 
-  it("templateLiteral. a", () =>
-    generatesValidValue(S.templateLiteral(S.literal("a"))));
-  it("templateLiteral. a b", () =>
-    generatesValidValue(
-      S.templateLiteral(S.literal("a"), S.literal(" "), S.literal("b"))
-    ));
-  it("templateLiteral. ${string}", () =>
-    generatesValidValue(S.templateLiteral(S.string)));
-  it("templateLiteral. a${string}", () =>
-    generatesValidValue(S.templateLiteral(S.literal("a"), S.string)));
-  it("templateLiteral. a${string}b", () =>
-    generatesValidValue(
-      S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
-    ));
+  schema("templateLiteral. a", S.templateLiteral(S.literal("a")));
 
-  it("templateLiteral. a${string*}b", () => {
-    const schema = S.templateLiteral(
+  schema(
+    "templateLiteral. a b",
+    S.templateLiteral(S.literal("a"), S.literal(" "), S.literal("b"))
+  );
+
+  schema("templateLiteral. ${string}", S.templateLiteral(S.string));
+
+  schema(
+    "templateLiteral. a${string}",
+    S.templateLiteral(S.literal("a"), S.string)
+  );
+  schema(
+    "templateLiteral. a${string}b",
+    S.templateLiteral(S.literal("a"), S.string, S.literal("b"))
+  );
+
+  schema(
+    "templateLiteral. a${string*}b",
+    S.templateLiteral(
       S.literal("a"),
       pipe(
         S.string,
         _.faker((f) => f.string.alpha({ length: { min: 0, max: 10 } }))
       ),
       S.literal("b")
-    );
-
-    generatesValidValue(schema);
-  });
+    )
+  );
 
   // filters
-  it("number/ int", () => generatesValidValue(pipe(S.number, S.int())));
-  it("number/ (0, 5)", () =>
-    generatesValidValue(pipe(S.number, S.greaterThan(0), S.lessThan(5))));
-  it("number/ int (0, 5)", () =>
-    generatesValidValue(
-      pipe(S.number, S.int(), S.greaterThan(0), S.lessThan(5))
-    ));
-  it("number/ int [0, 5]", () =>
-    generatesValidValue(
-      pipe(S.number, S.int(), S.greaterThanOrEqualTo(0), S.lessThanOrEqualTo(5))
-    ));
-  it("bigint/ (0, 5)", () =>
-    generatesValidValue(
-      pipe(S.bigint, S.greaterThanBigint(0n), S.lessThanBigint(5n))
-    ));
-  it("string/ length", () => generatesValidValue(pipe(S.string, S.length(10))));
-  it("string/ minLength, maxLength", () =>
-    generatesValidValue(pipe(S.string, S.minLength(30), S.maxLength(50))));
-  it("string/ pattern", () =>
-    generatesValidValue(pipe(S.string, S.pattern(/hello-[1-5]/))));
-  it("array/ itemsCount", () =>
-    generatesValidValue(pipe(S.array(S.string), S.itemsCount(10))));
 
-  it("record. <a${string}b, number>", () => {
-    const schema = S.record(
+  schema("number/ int", pipe(S.number, S.int()));
+  schema("number/ (0, 5)", pipe(S.number, S.greaterThan(0), S.lessThan(5)));
+
+  schema(
+    "number/ int (0, 5)",
+    pipe(S.number, S.int(), S.greaterThan(0), S.lessThan(5))
+  );
+
+  schema(
+    "number/ int [0, 5]",
+    S.number.pipe(S.int(), S.greaterThanOrEqualTo(0), S.lessThanOrEqualTo(5))
+  );
+
+  schema(
+    "bigint/ (0, 5)",
+    S.bigint.pipe(S.greaterThanBigint(0n), S.lessThanBigint(5n))
+  );
+
+  schema("string/ length", S.string.pipe(S.length(10)));
+
+  schema(
+    "string/ minLength, maxLength",
+    pipe(S.string, S.minLength(30), S.maxLength(50))
+  );
+
+  schema("string/ pattern", pipe(S.string, S.pattern(/hello-[1-5]/)));
+
+  schema(
+    "record. <a${string}b, number>",
+    S.record(
       S.templateLiteral(S.literal("a"), S.string, S.literal("b")),
       S.number
-    );
-    generatesValidValue(schema);
-  });
+    )
+  );
 
   it("never", () => {
     expect(() => _.to(S.never)(F.faker)).toThrowError(
@@ -94,66 +107,44 @@ describe("faker", () => {
     );
   });
 
-  it("transform", () => {
-    const schema: S.Schema<string, readonly [string]> = pipe(
+  schema(
+    "transform",
+    pipe(
       S.string,
       S.transform(
         S.tuple(S.string),
         (s) => [s] as readonly [string],
         ([s]) => s
       )
-    );
+    )
+  );
 
-    generatesValidValue(schema);
-  });
+  schema(
+    "tuple",
+    pipe(S.tuple(S.string, S.number), S.rest(S.boolean), S.element(S.string))
+  );
 
-  it("tuple", () => {
-    const schema = pipe(
-      S.tuple(S.string, S.number),
-      S.rest(S.boolean),
-      S.element(S.string)
-    );
-    generatesValidValue(schema);
-  });
-
-  it("struct", () => {
-    const schema = pipe(
+  schema(
+    "struct",
+    pipe(
       S.struct({
         a: S.string,
         b: S.number,
         c: pipe(S.nonEmptyArray(S.number)),
         d: S.optional(S.boolean),
       })
-    );
+    )
+  );
 
-    generatesValidValue(schema);
-  });
+  schema("struct - partial", S.partial(S.struct({ a: S.string, b: S.number })));
 
-  it("Date", () => {
-    const schema = S.DateFromSelf;
-    generatesValidValue(schema);
-  });
-
-  it("struct - partial", () => {
-    const schema = S.partial(S.struct({ a: S.string, b: S.number }));
-    generatesValidValue(schema);
-  });
-
-  it("struct - extra props", () => {
-    const schema = pipe(
+  schema(
+    "struct - extra props",
+    pipe(
       S.struct({ a: S.symbol, b: S.number }),
       S.extend(S.record(S.string, S.string))
-    );
-    generatesValidValue(schema);
-  });
-
-  it("lazy", () => {
-    const schema = Category;
-    const fake = _.to(schema)(F.faker);
-
-    generatesValidValue(schema);
-    expect(S.is(schema)(fake)).to.be.true;
-  });
+    )
+  );
 
   it("example", () => {
     const Person = S.struct({
