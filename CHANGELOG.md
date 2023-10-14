@@ -1,5 +1,13 @@
 # @kellyjesse881/empty
 
+## 0.0.21
+
+### Patch Changes
+
+- 45ae860: updated package exports
+- f2f737e: added arbitrary object Equivalence
+- 7b390b4: faker: added support for Date
+
 ## 0.0.20
 
 ### Patch Changes
