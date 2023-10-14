@@ -1,9 +1,6 @@
 lockfileVersion: '6.0'
 
 dependencies:
-  '@effect/printer':
-    specifier: ^0.13.0
-    version: 0.13.0(@effect/typeclass@0.10.0)
   '@effect/schema':
     specifier: ^0.43.1
     version: 0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1)
@@ -264,16 +261,6 @@ packages:
       human-id: 1.0.2
       prettier: 2.8.4
     dev: true
-
-  /@effect/printer@0.13.0(@effect/typeclass@0.10.0):
-    resolution: {integrity: sha512-vqKilbg36AEHZJNj9fiV6qUALojR2kVePKbuJJAkaGQao9Duc6rL3QSbaGEaEzar6v68j6TGTOndg/inI2bQFA==}
-    peerDependencies:
-      '@effect/data': ~0.17.1
-      '@effect/io': ~0.38.0
-      '@effect/typeclass': ~0.3.0
-    dependencies:
-      '@effect/typeclass': 0.10.0(effect@2.0.0-next.48)
-    dev: false
 
   /@effect/schema@0.43.1(effect@2.0.0-next.48)(fast-check@3.13.1):
     resolution: {integrity: sha512-2IMfeLJiRqryAqNliSl3Tjr6mC98KkBPOmR9HtgAbo09L4GolpWOMKo6XsALlYLnCNmLur67FGyuOW+bDEDxUw==}

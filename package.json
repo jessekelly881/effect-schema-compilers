@@ -40,7 +40,6 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@effect/printer": "^0.13.0",
     "@effect/schema": "^0.43.1",
     "@effect/typeclass": "^0.10.0",
     "effect": "2.0.0-next.48",
