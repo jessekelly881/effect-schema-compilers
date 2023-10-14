@@ -24,6 +24,9 @@ describe("faker", () => {
   schema("number", S.number);
   schema("bigint", S.bigint);
   schema("string", S.string);
+  schema("string/ length", S.string.pipe(S.length(10)));
+  schema("string/ min, max", S.string.pipe(S.minLength(30), S.maxLength(50)));
+  schema("string/ pattern", pipe(S.string, S.pattern(/hello-[1-5]/)));
   schema("symbol", S.symbol);
   schema("union", S.union(S.number, S.string));
   schema("record", S.record(S.string, S.number));
@@ -56,22 +59,19 @@ describe("faker", () => {
     "templateLiteral. a${string*}b",
     S.templateLiteral(
       S.literal("a"),
-      pipe(
-        S.string,
+      S.string.pipe(
         _.faker((f) => f.string.alpha({ length: { min: 0, max: 10 } }))
       ),
       S.literal("b")
     )
   );
 
-  // filters
-
-  schema("number/ int", pipe(S.number, S.int()));
-  schema("number/ (0, 5)", pipe(S.number, S.greaterThan(0), S.lessThan(5)));
+  schema("number/ int", S.number.pipe(S.int()));
+  schema("number/ (0, 5)", S.number.pipe(S.greaterThan(0), S.lessThan(5)));
 
   schema(
     "number/ int (0, 5)",
-    pipe(S.number, S.int(), S.greaterThan(0), S.lessThan(5))
+    S.number.pipe(S.int(), S.greaterThan(0), S.lessThan(5))
   );
 
   schema(
@@ -83,15 +83,6 @@ describe("faker", () => {
     "bigint/ (0, 5)",
     S.bigint.pipe(S.greaterThanBigint(0n), S.lessThanBigint(5n))
   );
-
-  schema("string/ length", S.string.pipe(S.length(10)));
-
-  schema(
-    "string/ minLength, maxLength",
-    pipe(S.string, S.minLength(30), S.maxLength(50))
-  );
-
-  schema("string/ pattern", pipe(S.string, S.pattern(/hello-[1-5]/)));
 
   schema(
     "record. <a${string}b, number>",
