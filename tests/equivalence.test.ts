@@ -84,17 +84,14 @@ describe("equivalence", () => {
     expect(eq(Fruits.Apple, Fruits.Banana)).toBe(false);
   });
 
-  /*
-    it("object/ ", () => {
-        const schema = S.object
-        const eq = _.to(schema)();
+  it("object/ ", () => {
+    const schema = S.object;
+    const eq = _.to(schema)();
 
-        console.log(schema)
-        // generatesValidEq(schema)
-        expect(eq({ a: 1 }, { a: 1 })).toBe(true)
-        expect(eq({ a: 1 }, { b: 1 })).toBe(false)
-    })
-    */
+    generatesValidEq(schema);
+    expect(eq({ a: 1 }, { a: 1 })).toBe(true);
+    expect(eq({ a: 1 }, { b: 1 })).toBe(false);
+  });
 
   it("struct/ ", () => {
     const schema = pipe(
