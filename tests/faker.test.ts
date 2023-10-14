@@ -129,6 +129,11 @@ describe("faker", () => {
     generatesValidValue(schema);
   });
 
+  it("Date", () => {
+    const schema = S.DateFromSelf;
+    generatesValidValue(schema);
+  });
+
   it("struct - partial", () => {
     const schema = S.partial(S.struct({ a: S.string, b: S.number }));
     generatesValidValue(schema);
