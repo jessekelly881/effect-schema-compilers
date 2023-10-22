@@ -38,13 +38,12 @@ describe("faker", () => {
   schema("DateFromSelf", S.DateFromSelf);
 
   schema("templateLiteral. a", S.templateLiteral(S.literal("a")));
+  schema("templateLiteral. ${string}", S.templateLiteral(S.string));
 
   schema(
     "templateLiteral. a b",
     S.templateLiteral(S.literal("a"), S.literal(" "), S.literal("b"))
   );
-
-  schema("templateLiteral. ${string}", S.templateLiteral(S.string));
 
   schema(
     "templateLiteral. a${string}",
