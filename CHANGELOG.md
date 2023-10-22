@@ -1,5 +1,12 @@
 # @kellyjesse881/empty
 
+## 0.0.22
+
+### Patch Changes
+
+- 14ba807: removed json schema compiler
+- 14ba807: updated effect packages
+
 ## 0.0.21
 
 ### Patch Changes
