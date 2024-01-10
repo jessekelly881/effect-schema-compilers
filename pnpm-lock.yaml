@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   '@effect/schema':
     specifier: ^0.45.5
@@ -958,7 +962,7 @@ packages:
       bluebird: 3.7.2
       chokidar: 2.1.8
       deep-assign: 2.0.0
-      follow-redirects: 1.15.2
+      follow-redirects: 1.15.4
       fs-extra: 5.0.0
       glob: 7.1.6
       minimatch: 3.1.2
@@ -1795,8 +1799,8 @@ packages:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
 
-  /follow-redirects@1.15.2:
-    resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
+  /follow-redirects@1.15.4:
+    resolution: {integrity: sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==}
     engines: {node: '>=4.0'}
     peerDependencies:
       debug: '*'
@@ -4378,7 +4382,3 @@ packages:
     dev: true
 
 publishDirectory: dist
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
