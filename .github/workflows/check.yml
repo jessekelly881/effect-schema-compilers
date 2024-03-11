@@ -1,0 +1,97 @@
+name: Check
+on:
+    workflow_dispatch:
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install dependencies
+              uses: ./.github/actions/setup
+            - run: pnpm build
+
+    types:
+        name: Types
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install dependencies
+              uses: ./.github/actions/setup
+            - run: pnpm dtslint
+            - run: pnpm check
+
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install dependencies
+              uses: ./.github/actions/setup
+            - run: pnpm lint
+            - run: pnpm circular
+
+    test:
+        name: Test (${{ matrix.runtime }})
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        strategy:
+            fail-fast: false
+            matrix:
+                runtime: [Node, Bun]
+        steps:
+            - uses: actions/checkout@v4
+            - name: Install dependencies
+              uses: ./.github/actions/setup
+            - uses: oven-sh/setup-bun@v1
+              if: matrix.runtime == 'Bun'
+              with:
+                  bun-version: 1.0.25
+            - name: Test
+              run: pnpm vitest
+              if: matrix.runtime == 'Node'
+            - name: Test
+              run: bun vitest
+              if: matrix.runtime == 'Bun'
+
+    analyze:
+        name: Analyze
+        runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+        timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+        permissions:
+            security-events: write
+            actions: read
+            contents: read
+
+        strategy:
+            fail-fast: false
+            matrix:
+                language: ["javascript-typescript"]
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v3
+              with:
+                  languages: ${{ matrix.language }}
+                  queries: security-extended
+
+            - name: Autobuild
+              uses: github/codeql-action/autobuild@v3
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v3
+              with:
+                  category: "/language:${{matrix.language}}"
