@@ -45,9 +45,9 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@effect/schema": "^0.45.8",
-    "@effect/typeclass": "^0.10.0",
-    "effect": "2.0.0-next.50",
+    "@effect/schema": "^0.63.3",
+    "@effect/typeclass": "^0.23.2",
+    "effect": "2.4.2",
     "fast-check": "^3.16.0",
     "typescript": "^5.4.2"
   },
