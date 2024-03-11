@@ -21,20 +21,24 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/**/*.ts --format cjs,esm --dts",
-    "lint": "tsc",
+    "lint": "eslint 'src/*.{ts,tsx}'",
     "dev": "vitest",
     "test": "vitest run",
     "ci": "pnpm run lint && pnpm run test && pnpm run build",
-    "release": "pnpm run ci && changeset publish"
+    "release": "pnpm run ci && changeset publish",
+    "check": "tsc -b tsconfig.json"
   },
   "author": "Jesse Kelly",
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@faker-js/faker": "^8.4.1",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
     "ajv": "^8.12.0",
     "build-utils": "^2.0.12",
     "eslint": "^8.57.0",
+    "eslint-plugin-deprecation": "^2.0.0",
     "husky": "^8.0.3",
     "tsup": "^7.2.0",
     "vitest": "^0.34.6"
