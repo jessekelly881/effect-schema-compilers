@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "target": "ES2022",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "ESNext",
     "noImplicitAny": true,
     "removeComments": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Bundler",
     "preserveConstEnums": true,
   },
   "include": [

@@ -30,21 +30,21 @@
   "author": "Jesse Kelly",
   "license": "MIT",
   "devDependencies": {
-    "@changesets/cli": "^2.26.0",
-    "@faker-js/faker": "^8.0.2",
+    "@changesets/cli": "^2.27.1",
+    "@faker-js/faker": "^8.4.1",
     "ajv": "^8.12.0",
     "build-utils": "^2.0.12",
-    "eslint": "^8.47.0",
+    "eslint": "^8.57.0",
     "husky": "^8.0.3",
     "tsup": "^7.2.0",
     "vitest": "^0.34.6"
   },
   "dependencies": {
-    "@effect/schema": "^0.45.5",
+    "@effect/schema": "^0.45.8",
     "@effect/typeclass": "^0.10.0",
     "effect": "2.0.0-next.50",
-    "fast-check": "^3.13.1",
-    "typescript": "^5.0.4"
+    "fast-check": "^3.16.0",
+    "typescript": "^5.4.2"
   },
   "exports": {
     ".": {
