@@ -25,13 +25,14 @@
     "dev": "vitest",
     "test": "vitest run",
     "ci": "pnpm run lint && pnpm run test && pnpm run build",
-    "release": "pnpm run ci && changeset publish",
+    "publish": "changeset publish",
     "check": "tsc -b tsconfig.json"
   },
   "author": "Jesse Kelly",
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@effect/docgen": "^0.3.8",
     "@faker-js/faker": "^8.4.1",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
