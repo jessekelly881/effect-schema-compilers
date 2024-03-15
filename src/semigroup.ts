@@ -51,14 +51,13 @@ const go = (ast: AST.AST): Semigroup<any> => {
 		case "VoidKeyword":
 		case "AnyKeyword":
 		case "TemplateLiteral":
+		case "Declaration":
 			return () => Semi.last();
 
 		case "Refinement":
 			return go(ast.from);
 		case "Transform":
 			return go(ast.to);
-		case "Declaration":
-			return go(ast.type);
 
 		case "Suspend": {
 			const get = memoizeThunk(() => go(ast.f()));

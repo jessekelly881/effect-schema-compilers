@@ -75,9 +75,7 @@ export type Constraints =
 // MinItemsTypeId
 // MaxItemsTypeId
 // ItemsCountTypeId
-export const getConstraints = (
-	ast: AST.Refinement | AST.Transform
-): Constraints | undefined => {
+export const getConstraints = (ast: AST.AST): Constraints | undefined => {
 	const TypeAnnotationId = ast.annotations[AST.TypeAnnotationId];
 	const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
 

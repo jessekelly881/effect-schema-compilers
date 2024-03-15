@@ -88,6 +88,15 @@ describe("semigroup", () => {
 		expect(combine("a", "b")).toBe("ab");
 	});
 
+	it("string/ ", () => {
+		const schema = S.Date;
+		const { combine } = _.make(schema)();
+
+		generatesValidSemigroup(schema);
+		const now = new Date();
+		expect(combine(now, now)).toBe(now);
+	});
+
 	it("enum/ ", () => {
 		const schema = S.enums(Fruits);
 		const { combine } = _.make(schema)();

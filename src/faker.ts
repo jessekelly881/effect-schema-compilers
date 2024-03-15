@@ -134,12 +134,12 @@ const go = (
 				if (constraints && constraints._tag === "BigintConstraints") {
 					const c = constraints.constraints;
 
-					const min = c.min ?? c.exclusiveMin;
-					const max = c.max ?? c.exclusiveMax;
+					const min = c.min ?? c.min;
+					const max = c.max ?? c.max;
 
 					const val = f.number.bigInt({
-						min: isBigInt(c.exclusiveMin) ? min + 1n : min,
-						max: isBigInt(c.exclusiveMax) ? max - 1n : max
+						min: isBigInt(c.min) ? min + 1n : min,
+						max: isBigInt(c.max) ? max - 1n : max
 					});
 
 					return val;
