@@ -39,8 +39,6 @@ class BigintConstraints {
 	constructor(
 		readonly constraints: {
 			min?: bigint;
-			exclusiveMin?: bigint;
-			exclusiveMax?: bigint;
 			max?: bigint;
 		}
 	) {}
@@ -77,9 +75,7 @@ export type Constraints =
 // MinItemsTypeId
 // MaxItemsTypeId
 // ItemsCountTypeId
-export const getConstraints = (
-	ast: AST.Refinement
-): Constraints | undefined => {
+export const getConstraints = (ast: AST.AST): Constraints | undefined => {
 	const TypeAnnotationId = ast.annotations[AST.TypeAnnotationId];
 	const jsonSchema: any = ast.annotations[AST.JSONSchemaAnnotationId];
 
@@ -106,24 +102,37 @@ export const getConstraints = (
 			});
 
 		// Bigint
-		case S.GreaterThanBigintTypeId:
+		case S.GreaterThanBigintTypeId: {
+			const params: any = ast.annotations[TypeAnnotationId];
 			return new BigintConstraints({
-				exclusiveMin: jsonSchema.exclusiveMinimum
+				min: params.min + 1n
 			});
-		case S.GreaterThanOrEqualToBigintTypeId:
-			return new BigintConstraints({ min: jsonSchema.minimum });
-		case S.LessThanBigintTypeId:
+		}
+		case S.GreaterThanOrEqualToBigintTypeId: {
+			const params: any = ast.annotations[TypeAnnotationId];
 			return new BigintConstraints({
-				exclusiveMax: jsonSchema.exclusiveMaximum
+				min: params.min
 			});
-		case S.LessThanOrEqualToBigintTypeId:
-			return new BigintConstraints({ max: jsonSchema.maximum });
-		case S.BetweenBigintTypeId:
+		}
+		case S.LessThanBigintTypeId: {
+			const params: any = ast.annotations[TypeAnnotationId];
 			return new BigintConstraints({
-				min: jsonSchema.minimum,
-				max: jsonSchema.maximum
+				max: params.max
 			});
-
+		}
+		case S.LessThanOrEqualToBigintTypeId: {
+			const params: any = ast.annotations[TypeAnnotationId];
+			return new BigintConstraints({
+				max: params.max - 1n
+			});
+		}
+		case S.BetweenBigintTypeId: {
+			const params: any = ast.annotations[TypeAnnotationId];
+			return new BigintConstraints({
+				min: params.min,
+				max: params.max
+			});
+		}
 		// String
 		case S.LengthTypeId:
 			return new StringConstraints({

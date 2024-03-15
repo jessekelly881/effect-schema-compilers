@@ -26,15 +26,17 @@ export const faker = <A>(
 const getAnnotation = AST.getAnnotation<Faker<unknown>>(FakerHookId);
 const getId = AST.getAnnotation<string>(AST.IdentifierAnnotationId);
 
-export const to = <I, A>(schema: S.Schema<I, A>): Faker<A> =>
+export const make = <A, I>(schema: S.Schema<I, A>): Faker<A> =>
 	go(AST.to(schema.ast));
-
-export const from = <I, A>(schema: S.Schema<I, A>): Faker<I> =>
-	go(AST.from(schema.ast));
 
 const knownTypesMap: Record<string, (_: F.Faker) => unknown> = {
 	Date: (f: F.Faker) => f.date.recent()
 };
+
+const getHook =
+	AST.getAnnotation<(...args: ReadonlyArray<Faker<any>>) => Faker<any>>(
+		FakerHookId
+	);
 
 /**
  * @param depthLimit - Used to limit recursion and only generate elements of limited depth
@@ -61,6 +63,20 @@ const go = (
 		return knownTypesMap[id.value];
 	}
 
+	const hook = getHook(ast);
+	if (O.isSome(hook)) {
+		switch (ast._tag) {
+			case "Declaration":
+				return hook.value(
+					...ast.typeParameters.map((p) =>
+						go(p, depthLimit, getConstraints(ast))
+					)
+				);
+			default:
+				return hook.value();
+		}
+	}
+
 	switch (ast._tag) {
 		case "NeverKeyword":
 			throw new Error("cannot build a Faker for `never`");
@@ -73,8 +89,14 @@ const go = (
 			);
 		case "Transform":
 			return go(ast.to, depthLimit);
-		case "Declaration":
-			return go(ast.type, depthLimit);
+
+		case "Declaration": {
+			throw new Error(
+				`cannot build an instance of Faker for a declaration without annotations (${AST.format(ast)})`
+			);
+		}
+		case "UndefinedKeyword":
+			return () => undefined;
 
 		case "ObjectKeyword":
 			return () => ({});
@@ -99,7 +121,7 @@ const go = (
 						? f.number.int({
 								min: isNumber(c.exclusiveMin) ? min + 1 : min,
 								max: isNumber(c.exclusiveMax) ? max - 1 : max
-						  })
+							})
 						: f.number.float({ min, max });
 
 					return val;
@@ -112,12 +134,12 @@ const go = (
 				if (constraints && constraints._tag === "BigintConstraints") {
 					const c = constraints.constraints;
 
-					const min = c.min ?? c.exclusiveMin;
-					const max = c.max ?? c.exclusiveMax;
+					const min = c.min ?? c.min;
+					const max = c.max ?? c.max;
 
 					const val = f.number.bigInt({
-						min: isBigInt(c.exclusiveMin) ? min + 1n : min,
-						max: isBigInt(c.exclusiveMax) ? max - 1n : max
+						min: isBigInt(c.min) ? min + 1n : min,
+						max: isBigInt(c.max) ? max - 1n : max
 					});
 
 					return val;
@@ -202,7 +224,7 @@ const go = (
 				return (f: F.Faker) => els.map((el) => el(f));
 			}
 		}
-		case "Lazy": {
+		case "Suspend": {
 			const get = memoizeThunk(() => go(ast.f(), depthLimit));
 			return (f: F.Faker) => get()(f);
 		}

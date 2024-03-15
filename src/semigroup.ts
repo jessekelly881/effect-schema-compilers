@@ -9,7 +9,7 @@ export const SemigroupHookId = createHookId("SemigroupHookId");
 
 export const semigroup = <A>(
 	semigroup: Semi.Semigroup<A>
-): (<I>(self: S.Schema<I, A>) => S.Schema<I, A>) =>
+): (<I>(self: S.Schema<A, I>) => S.Schema<A, I>) =>
 	S.annotations({ [SemigroupHookId]: semigroup });
 
 const getAnnotation =
@@ -23,11 +23,8 @@ interface Semigroup<A> {
  * @description
  * Generates a Semigroup from a given Schema. By default all values implement Semigroup.last so by default values are just overridden.
  */
-export const to = <I, A>(schema: S.Schema<I, A>): Semigroup<A> =>
-	go(AST.to(schema.ast));
-
-export const from = <I, A>(schema: S.Schema<I, A>): Semigroup<I> =>
-	go(AST.from(schema.ast));
+export const make = <A, I>(schema: S.Schema<A, I>): Semigroup<A> =>
+	go(schema.ast);
 
 const go = (ast: AST.AST): Semigroup<any> => {
 	const annotations = getAnnotation(ast);
@@ -54,16 +51,15 @@ const go = (ast: AST.AST): Semigroup<any> => {
 		case "VoidKeyword":
 		case "AnyKeyword":
 		case "TemplateLiteral":
+		case "Declaration":
 			return () => Semi.last();
 
 		case "Refinement":
 			return go(ast.from);
 		case "Transform":
 			return go(ast.to);
-		case "Declaration":
-			return go(ast.type);
 
-		case "Lazy": {
+		case "Suspend": {
 			const get = memoizeThunk(() => go(ast.f()));
 			return () => get()();
 		}

@@ -10,11 +10,6 @@ export * as Empty from "./empty";
 /**
  * @since 1.0.0
  */
-export * as Equivalence from "./equivalence";
-
-/**
- * @since 1.0.0
- */
 export * as Faker from "./faker";
 
 /**

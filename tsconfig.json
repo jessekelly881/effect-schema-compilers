@@ -10,10 +10,9 @@
   },
   "include": [
     "src/**/*",
-    "tests/empty.test.ts"
+    "tests/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "node_modules"
   ],
 }
