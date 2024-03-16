@@ -56,7 +56,7 @@ const go = (ast: AST.AST): Semigroup<any> => {
 
 		case "Refinement":
 			return go(ast.from);
-		case "Transform":
+		case "Transformation":
 			return go(ast.to);
 
 		case "Suspend": {
@@ -64,7 +64,7 @@ const go = (ast: AST.AST): Semigroup<any> => {
 			return () => get()();
 		}
 
-		case "Tuple": {
+		case "TupleType": {
 			const els = ast.elements.map((e) => go(e.type));
 			const rest = ast.rest;
 
@@ -81,28 +81,28 @@ const go = (ast: AST.AST): Semigroup<any> => {
 						output.push(result);
 					}
 
-					if (O.isSome(rest)) {
-						const tail = RA.tailNonEmpty(rest.value).map((e) =>
-							go(e)
+					const values = RA.fromIterable(rest.values());
+					const tail = RA.tail(values).pipe(
+						O.map((ts) => ts.map((e) => go(e))),
+						O.getOrElse(() => [])
+					);
+					const minLen = tail.length + els.length; // min len of tuple
+
+					// rest head
+					const thatRestLen = that.length - minLen;
+
+					for (let h = 0; h < thatRestLen; h++) {
+						output.push(that[els.length + h]);
+					}
+
+					// rest tail
+					for (let t = 0; t < tail.length; t++) {
+						const { combine } = tail[t]();
+						const result = combine(
+							self[self.length - tail.length + t],
+							that[that.length - tail.length + t]
 						);
-						const minLen = tail.length + els.length; // min len of tuple
-
-						// rest head
-						const thatRestLen = that.length - minLen;
-
-						for (let h = 0; h < thatRestLen; h++) {
-							output.push(that[els.length + h]);
-						}
-
-						// rest tail
-						for (let t = 0; t < tail.length; t++) {
-							const { combine } = tail[t]();
-							const result = combine(
-								self[self.length - tail.length + t],
-								that[that.length - tail.length + t]
-							);
-							output.push(result);
-						}
+						output.push(result);
 					}
 
 					return output;

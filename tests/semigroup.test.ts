@@ -106,12 +106,7 @@ describe("semigroup", () => {
 	});
 
 	it("tuple/ e + r + e", () => {
-		const schema = pipe(
-			S.tuple(S.string),
-			S.rest(S.boolean),
-			S.element(pipe(S.number, S.nonNaN())),
-			S.element(S.boolean)
-		);
+		const schema = S.tuple([S.string], S.boolean, S.NonNaN, S.boolean);
 		const { combine } = _.make(schema)();
 
 		generatesValidSemigroup(schema);

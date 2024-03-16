@@ -26,8 +26,7 @@ export const faker = <A>(
 const getAnnotation = AST.getAnnotation<Faker<unknown>>(FakerHookId);
 const getId = AST.getAnnotation<string>(AST.IdentifierAnnotationId);
 
-export const make = <A, I>(schema: S.Schema<I, A>): Faker<A> =>
-	go(AST.to(schema.ast));
+export const make = <A, I>(schema: S.Schema<I, A>): Faker<A> => go(schema.ast);
 
 const knownTypesMap: Record<string, (_: F.Faker) => unknown> = {
 	Date: (f: F.Faker) => f.date.recent()
@@ -84,15 +83,19 @@ const go = (
 		case "Refinement":
 			return go(
 				ast.from,
-				depthLimit,
+				depthLimit - 1,
 				combineConstraints(constraints, getConstraints(ast))
 			);
-		case "Transform":
-			return go(ast.to, depthLimit);
+		case "Transformation":
+			return go(
+				ast.to,
+				depthLimit - 1,
+				combineConstraints(constraints, getConstraints(ast))
+			);
 
 		case "Declaration": {
 			throw new Error(
-				`cannot build an instance of Faker for a declaration without annotations (${AST.format(ast)})`
+				`cannot build an instance of Faker for a declaration without annotations (${ast})`
 			);
 		}
 		case "UndefinedKeyword":
@@ -134,17 +137,16 @@ const go = (
 				if (constraints && constraints._tag === "BigintConstraints") {
 					const c = constraints.constraints;
 
-					const min = c.min ?? c.min;
-					const max = c.max ?? c.max;
+					const min = c.min ?? undefined;
+					const max = c.max ?? undefined;
 
 					const val = f.number.bigInt({
-						min: isBigInt(c.min) ? min + 1n : min,
-						max: isBigInt(c.max) ? max - 1n : max
+						min: isBigInt(c.min) ? c.min + 1n : min,
+						max: isBigInt(c.max) ? c.max - 1n : max
 					});
 
 					return val;
 				}
-
 				return f.number.bigInt();
 			};
 		case "StringKeyword":
@@ -180,60 +182,69 @@ const go = (
 			};
 		}
 		case "Union": {
-			const u = ast.types.map((t) => go(t, depthLimit));
+			const u = ast.types.map((t) => go(t, depthLimit - 1));
 			return (f: F.Faker) => f.helpers.arrayElement(u.map((el) => el(f)));
 		}
-		case "Tuple": {
+		case "TupleType": {
 			const els = ast.elements.map((e) => go(e.type, depthLimit - 1));
 
-			if (O.isSome(ast.rest)) {
-				const head = go(
-					RA.headNonEmpty(ast.rest.value),
-					depthLimit - 1
-				);
-				const tail = RA.tailNonEmpty(ast.rest.value).map((e) =>
-					go(e, depthLimit - 1)
-				);
+			const values = RA.fromIterable(ast.rest.values());
+			const head = RA.head(values).pipe(
+				O.map((ast) => go(ast, depthLimit - 1))
+			);
 
-				return (f: F.Faker) => {
-					let min = 0,
-						max = 10; // default max, min
-					const c = constraints;
-					if (c && c._tag === "ArrayConstraints") {
-						if (c.constraints.maxItems) {
-							max = c.constraints.maxItems ?? max;
-						}
-						if (c.constraints.minItems) {
-							min = c.constraints.minItems ?? min;
-						}
-					}
+			const tail = RA.tail(values).pipe(
+				O.map((as) => as.map((e) => go(e, depthLimit - 1)))
+			);
 
-					const numToGen = f.number.int({ min, max });
-					const restEls = depthLimitReached
-						? []
-						: RA.range(0, numToGen - 1).map(() => head(f));
-					const postRestEls = tail.map((el) => el(f));
-
-					return [
-						...els.map((el) => el(f)),
-						...restEls,
-						...postRestEls
-					];
-				};
-			} else {
-				return (f: F.Faker) => els.map((el) => el(f));
+			if (depthLimitReached) {
+				return () => [];
 			}
+
+			return (f: F.Faker) => {
+				let min = 0,
+					max = 10; // default max, min
+				const c = constraints;
+				if (c && c._tag === "ArrayConstraints") {
+					if (c.constraints.maxItems) {
+						max = c.constraints.maxItems ?? max;
+					}
+					if (c.constraints.minItems) {
+						min = c.constraints.minItems ?? min;
+					}
+				}
+
+				const numToGen = f.number.int({ min, max });
+				const s = O.all(RA.range(1, numToGen).map(() => head)).pipe(
+					O.getOrElse(() => [] as Faker<any>[])
+				);
+				const restEls = numToGen > 0 ? s : [];
+
+				const postRestEls = O.getOrElse(tail, () => []);
+
+				const ret = [
+					...els.map((el) => el(f)),
+					...restEls.map((el) => el(f)),
+					...postRestEls.map((el) => el(f))
+				];
+
+				return ret;
+			};
 		}
 		case "Suspend": {
-			const get = memoizeThunk(() => go(ast.f(), depthLimit));
-			return (f: F.Faker) => get()(f);
+			const get = memoizeThunk(() => go(ast.f(), depthLimit - 1));
+			return (f) => get()(f);
 		}
 		case "TypeLiteral": {
 			const propertySignaturesTypes = ast.propertySignatures.map((f) =>
 				go(f.type, depthLimit - 1)
 			);
 			const indexSignatures = ast.indexSignatures.map(
-				(is) => [go(is.parameter), go(is.type)] as const
+				(is) =>
+					[
+						go(is.parameter, depthLimit - 1),
+						go(is.type, depthLimit - 1)
+					] as const
 			);
 
 			return (f: F.Faker) => {

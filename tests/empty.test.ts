@@ -91,37 +91,29 @@ describe("empty", () => {
 
 	it("uniqueSymbol", () => {
 		const a = Symbol.for("test/a");
-		const schema = S.uniqueSymbol(a);
+		const schema = S.uniqueSymbolFromSelf(a);
 		const emptyTo = _.make(schema)();
 
 		expect(emptyTo.toString()).toEqual(a.toString());
 	});
 
 	it("tuple/ e + r", () => {
-		const schema = pipe(S.tuple(S.string, S.number), S.rest(S.boolean));
+		const schema = S.tuple([S.string, S.number], S.boolean);
 		expectEmptyValue(schema, ["", 0]);
 	});
 
 	it("tuple. e + e?", () => {
-		const schema = pipe(S.tuple(S.string), S.optionalElement(S.number));
+		const schema = S.tuple(S.string, S.optionalElement(S.number));
 		expectEmptyValue(schema, [""]);
 	});
 
 	it("tuple. e? + r", () => {
-		const schema = pipe(
-			S.tuple(),
-			S.optionalElement(S.string),
-			S.rest(S.number)
-		);
+		const schema = S.tuple([S.optionalElement(S.string)], S.number);
 		expectEmptyValue(schema, []);
 	});
 
 	it("tuple/ e + r + e", () => {
-		const schema = pipe(
-			S.tuple(S.string, S.number),
-			S.rest(S.boolean),
-			S.element(S.string)
-		);
+		const schema = S.tuple([S.string, S.number], S.boolean, S.string);
 		expectEmptyValue(schema, ["", 0, ""]);
 	});
 

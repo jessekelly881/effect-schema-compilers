@@ -39,7 +39,7 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
 			return () => ast.literal;
 		case "ObjectKeyword":
 			return () => ({});
-		case "Tuple": {
+		case "TupleType": {
 			const els = ast.elements
 				.filter((e) => !e.isOptional)
 				.map((e) => go(e.type));
@@ -51,30 +51,28 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
 					minItems = constraints.constraints.minItems;
 			}
 
-			if (O.isSome(rest)) {
-				return () => {
-					const head = go(RA.headNonEmpty(rest.value));
-					const tail = RA.tailNonEmpty(rest.value).map((e) => go(e));
-					const requiredElsCount = els.length + tail.length;
-					const minRestSize = Math.max(
-						minItems - requiredElsCount,
-						0
-					);
+			return () => {
+				const values = RA.fromIterable(rest.values());
+				const head = RA.head(values).pipe(O.map(go));
+				const tail = RA.tail(values).pipe(
+					O.map((asts) => asts.map((e) => go(e))),
+					O.getOrElse(() => [])
+				);
 
-					const restEls =
-						minRestSize > 0
-							? RA.range(1, minRestSize).map(() => head())
-							: [];
+				const requiredElsCount = els.length + tail.length;
+				const minRestSize = Math.max(minItems - requiredElsCount, 0);
 
-					return [
-						...els.map((el) => el()),
-						...restEls,
-						...tail.map((el) => el())
-					];
-				};
-			} else {
-				return () => els.map((el) => el());
-			}
+				const s = O.all(RA.range(1, minRestSize).map(() => head)).pipe(
+					O.getOrElse(() => [] as Empty<any>[])
+				);
+				const restEls = minRestSize > 0 ? s : [];
+
+				return [
+					...els.map((el) => el()),
+					...restEls.map((el) => el()),
+					...tail.map((el) => el())
+				];
+			};
 		}
 		case "BigIntKeyword":
 			return () => {
@@ -113,14 +111,14 @@ const go = (ast: AST.AST, constraints?: Constraints): Empty<any> => {
 				ast.from,
 				combineConstraints(constraints, getConstraints(ast))
 			);
-		case "Transform":
+		case "Transformation":
 			return go(
 				ast.to,
 				combineConstraints(constraints, getConstraints(ast))
 			);
 		case "Declaration":
 			throw new Error(
-				`cannot build an Empty for a declaration without annotations (${AST.format(ast)})`
+				`cannot build an Empty for a declaration without annotations (${ast})`
 			);
 		case "Enums":
 			return () => ast.enums[0][1];

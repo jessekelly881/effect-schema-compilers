@@ -114,14 +114,7 @@ describe("faker", () => {
 		)
 	);
 
-	schema(
-		"tuple",
-		pipe(
-			S.tuple(S.string, S.number),
-			S.rest(S.boolean),
-			S.element(S.string)
-		)
-	);
+	schema("tuple", S.tuple([S.string, S.number], S.boolean, S.string));
 
 	schema(
 		"struct",
