@@ -32,7 +32,7 @@
   "license": "MIT",
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
-    "@effect/docgen": "^0.3.8",
+    "@effect/docgen": "^0.4.0",
     "@faker-js/faker": "^8.4.1",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
@@ -47,7 +47,7 @@
   "dependencies": {
     "@effect/schema": "^0.64.5",
     "@effect/typeclass": "^0.23.2",
-    "effect": "2.4.7",
+    "effect": "2.4.13",
     "fast-check": "^3.16.0",
     "typescript": "^5.4.2"
   },
