@@ -38,16 +38,16 @@
     "@typescript-eslint/parser": "^7.1.1",
     "ajv": "^8.12.0",
     "build-utils": "^2.0.12",
-    "eslint": "^8.57.0",
-    "eslint-plugin-deprecation": "^2.0.0",
+    "eslint": "^9.4.0",
+    "eslint-plugin-deprecation": "^3.0.0",
     "husky": "^9.0.11",
     "tsup": "^8.0.2",
     "vitest": "^1.4.0"
   },
   "dependencies": {
-    "@effect/schema": "^0.64.5",
-    "@effect/typeclass": "^0.23.2",
-    "effect": "2.4.15",
+    "@effect/schema": "^0.67.17",
+    "@effect/typeclass": "^0.24.24",
+    "effect": "3.2.8",
     "fast-check": "^3.16.0",
     "typescript": "^5.4.2"
   },
